@@ -137,7 +137,7 @@ class DiceRolls extends ChangeNotifier {
     _allRolls.clear();
     _diceDisplays.clear();
 
-    _totalRolls = 0;
+    _totalRolls = _mod;
 
     int count = 0;
     for (int key in _diceCounts.keys) {
