@@ -35,6 +35,10 @@ class DiceRolls extends ChangeNotifier {
 
   var rng = new Random();
 
+  DiceRolls() {
+    setDiceButtons();
+  }
+
   void setDiceButtons() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _custom = (prefs.getInt('custom') ?? 2);

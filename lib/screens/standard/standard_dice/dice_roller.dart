@@ -70,17 +70,13 @@ class _DiceRollerState extends State<DiceRoller> {
         Expanded(
           flex: 3,
           child: Row(
-            children: !(diceRolls.getDiceButtons.length == 0) ?
-              diceRolls.getDiceButtons.sublist(0, 4) :
-              [Container()]
+              children: diceRolls.getDiceButtons.sublist(0, 4)
           ),
         ),
         Expanded(
           flex: 3,
           child: Row(
-              children: !(diceRolls.getDiceButtons.length == 0) ?
-              diceRolls.getDiceButtons.sublist(4, 8) :
-              [Container()]
+              children: diceRolls.getDiceButtons.sublist(4, 8)
           ),
         ),
         Expanded(

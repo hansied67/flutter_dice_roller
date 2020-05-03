@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          diceRolls.setDiceButtons();
+          // diceRolls.setDiceButtons();
           Navigator.pushReplacementNamed(context, '/dice');
         },
         child: globalVariables.isAndroid ? Icon(Icons.arrow_forward) : Icon(Icons.arrow_forward_ios)

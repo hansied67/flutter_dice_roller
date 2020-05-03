@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
 import 'standard_dice/dice_roller.dart';
+
 
 class StandardScreen extends StatefulWidget {
   StandardScreen({Key key}) : super(key: key);
@@ -45,7 +48,7 @@ class _StandardScreenState extends State<StandardScreen> {
     return Scaffold(
       drawer: new Drawer(),
       appBar: AppBar(
-        title: Text("Ass"),
+        title: Text("Dice Roller"),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected:_onHamburger,
