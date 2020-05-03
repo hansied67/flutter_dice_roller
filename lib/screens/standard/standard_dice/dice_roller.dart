@@ -108,6 +108,7 @@ class _DiceRollerState extends State<DiceRoller> {
                       child: AutoText("Roll", 25.0),
                       onPressed: () async {
                         diceRolls.rollAll();
+                        print(diceRolls.getDiceButtons.length);
 
                         for (var player in widget.audioPlayers) {
                           await player.stop();

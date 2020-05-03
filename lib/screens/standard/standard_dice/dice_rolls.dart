@@ -3,13 +3,16 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'dart:io';
 
 import 'dice_button.dart';
 import 'dice_display.dart';
+import 'package:flutterdiceroller/global_variables.dart';
 
 class DiceRolls extends ChangeNotifier {
+  final globalVariables = GlobalVariables();
   final _rowSize = 5;
 
   int _mod = 0;
@@ -32,12 +35,11 @@ class DiceRolls extends ChangeNotifier {
 
   var rng = new Random();
 
-  DiceRolls() {
-    setDiceButtons();
-  }
-
   void setDiceButtons() async {
-    changeCustom(await getCustomRoll());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _custom = (prefs.getInt('custom') ?? 2);
+    _diceCounts[_custom] = 0;
+
     for (var i in [4, 6, 8, 10, 12, 20, 100]) {
       _diceButtons.add(DiceButton(
           sides: i,
@@ -69,13 +71,15 @@ class DiceRolls extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeCustom(int custom) {
-    _diceCounts.remove(_diceCounts[_custom]);
-    print(_diceCounts);
-    _custom = custom;
-    _diceCounts[_custom] = 0;
-    notifyListeners();
+  void changeCustom(int custom) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    _diceCounts.remove(_diceCounts[_custom]);
+    _custom = custom;
+    await prefs.setInt('custom', _custom);
+    _diceCounts[_custom] = 0;
+
+    notifyListeners();
   }
 
   void decDie(int sides, int index) {
@@ -173,48 +177,5 @@ class DiceRolls extends ChangeNotifier {
   int get getMod => _mod;
   int get getTotalRolls => _totalRolls;
   bool get getMute => _mute;
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> _getLocalFile(String file) async {
-    // get the path to the document directory.
-    Directory directory = await getApplicationDocumentsDirectory();
-    var varPath = join(directory.path, file);
-    if (!await (File(varPath).exists())) {
-      ByteData data = await rootBundle.load("assets/docs/$file");
-      List<int> bytes = data.buffer.asUint8List(
-          data.offsetInBytes, data.lengthInBytes);
-      return await File(varPath).writeAsBytes(bytes);
-    }
-    else {
-      return File(varPath);
-    }
-  }
-
-  Future<int> getCustomRoll() async {
-    final file = await _getLocalFile("custom_roll.txt");
-    try {
-      String contents = await file.readAsString();
-      return int.parse(contents);
-    } catch (e) {
-      print(e);
-      return 2;
-    }
-  }
-
-  Future<File> writeCustomRoll(int custom) async {
-    final file = await _getLocalFile("custom_roll.txt");
-    try {
-
-    } catch (e) {
-      print(e);
-    }
-    return file.writeAsString('$custom');
-  }
-
-
+  int get getCustom => _custom;
 }
