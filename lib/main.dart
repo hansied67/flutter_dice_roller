@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         platform: globalVariables.isAndroid ? TargetPlatform.android : TargetPlatform.iOS
       ),
-      initialRoute: '/home',
+      initialRoute: '/dice',
       routes: {
         '/home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
         '/dice': (context) => StandardScreen(),
