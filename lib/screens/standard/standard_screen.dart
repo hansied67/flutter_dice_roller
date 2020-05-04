@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
+import '../../global_variables.dart';
 import 'standard_dice/dice_roller.dart';
 
 
@@ -17,11 +18,6 @@ class _StandardScreenState extends State<StandardScreen> {
   int _page = 0;
   PageController _controller;
   int _sides = 0;
-
-  List<Widget> _screens = <Widget>[
-    DiceRoller(),
-    Text('Index 1'),
-  ];
 
   void _onHamburger(String value) {
     switch (value) {
@@ -45,31 +41,42 @@ class _StandardScreenState extends State<StandardScreen> {
   @override
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
     return Scaffold(
       drawer: new Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Text("Screens"),
+            Container(
+              height: 100,
+              child: DrawerHeader(
+                child: Text("Screens"),
+              )
             ),
-            ListTile(
-              title: Text("Dice Roller"),
-              onTap: () {
-                // you're already on this page!
-              }
+            Container(
+              color: Theme.of(context).accentColor,
+              child: ListTile(
+                title: Text("Dice Roller"),
+                onTap: () {
+                  // you're already on this page!
+                }
+              )
             ),
             ListTile(
                 title: Text("Character"),
                 onTap: () {
                   // TODO: go to character screen
-                }
+                },
+                trailing: globalVariables.isAndroid ? Icon(Icons.arrow_forward) :
+                    Icon(Icons.arrow_forward_ios)
             ),
             ListTile(
                 title: Text("DM Tools"),
                 onTap: () {
                   // TODO: go to DM tools screen
-                }
+                },
+                trailing: globalVariables.isAndroid ? Icon(Icons.arrow_forward) :
+                    Icon(Icons.arrow_forward_ios)
             )
 
           ],
@@ -91,36 +98,7 @@ class _StandardScreenState extends State<StandardScreen> {
           )
         ],
       ),
-      body: PageView(
-        controller: _controller,
-        onPageChanged: (newPage) {
-          setState(() {
-            this._page = newPage;
-          });
-        },
-        children: _screens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _page,
-        onTap: (index) {
-          this._controller.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut
-          );
-        },
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('0'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.ac_unit),
-            title: Text('1'),
-          )
-        ],
-        selectedItemColor: Colors.purple[800],
-      ),
+      body: DiceRoller(),
     );
   }
 }
