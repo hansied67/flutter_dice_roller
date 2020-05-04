@@ -132,7 +132,7 @@ class DiceButton extends StatefulWidget {
                       try {
                         _sides = int.parse(value);
                       } on Exception {
-                        _sides = 2;
+                        _sides = diceRolls.getCustom;
                       }
                       diceRolls.changeCustom(_sides);
                       diceRolls.writeCustomRoll(_sides);
