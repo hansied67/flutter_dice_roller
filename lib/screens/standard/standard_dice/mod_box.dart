@@ -17,6 +17,7 @@ class ModBox extends StatefulWidget {
               children: <Widget>[
                 new Expanded(
                     child: new TextField(
+                      onSubmitted: Navigator.of(context).pop,
                       autofocus: true,
                       keyboardType: TextInputType.number,
                       decoration: new InputDecoration(

@@ -28,13 +28,13 @@ class _DiceRollerState extends State<DiceRoller> {
     return Column(
       children: <Widget>[
         Expanded(
-          flex: 4,
+          flex: 7,
           child: Column(
               children: diceRolls.getRows
           ),
         ),
         Expanded(
-          flex: 1,
+          flex: 2,
           child: Row(
             children: <Widget>[
               Expanded(
@@ -68,14 +68,14 @@ class _DiceRollerState extends State<DiceRoller> {
           )
         ),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: Row(
               children: diceRolls.getDiceButtons.length != 0 ?
                   diceRolls.getDiceButtons.sublist(0, 4) : [Container()]
           ),
         ),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: Row(
               children: diceRolls.getDiceButtons.length != 0 ?
               diceRolls.getDiceButtons.sublist(4, 8) : [Container()]

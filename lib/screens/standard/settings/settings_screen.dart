@@ -25,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hole"),
+        title: Text("Settings"),
           bottom: new TabBar(
             controller: _controller,
             tabs: myTabs

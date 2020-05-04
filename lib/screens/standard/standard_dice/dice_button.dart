@@ -123,6 +123,7 @@ class DiceButton extends StatefulWidget {
             children: <Widget>[
               new Expanded(
                 child: new TextField(
+                  onSubmitted: Navigator.of(context).pop,
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   decoration: new InputDecoration(
@@ -134,7 +135,6 @@ class DiceButton extends StatefulWidget {
                         _sides = diceRolls.getCustom;
                       }
                       diceRolls.changeCustom(_sides);
-                      diceRolls.writeCustomRoll(_sides);
                     },
                   )
                 )
@@ -166,7 +166,10 @@ class _DiceButtonState extends State<DiceButton> {
         flex: 1,
         child: GestureDetector(
           onTap: () async {
-            diceRolls.onTap(widget);
+            if (!widget._isCustom)
+              diceRolls.onTap(widget);
+            else
+              diceRolls.onTap(DiceButton(sides: diceRolls.getCustom, isCustom: true));
           },
           onLongPress: () async {
             if (widget._isCustom)
@@ -183,8 +186,10 @@ class _DiceButtonState extends State<DiceButton> {
                 )
               )
             ),
-            Center(child: AutoText(diceRolls.getDiceCounts[widget._sides].toString()
-                + "d" + widget._sides.toString(), 25.0, Colors.white, true)),
+            !(widget._isCustom) ? Center(child: AutoText(diceRolls.getDiceCounts[widget._sides].toString()
+                + "d" + widget._sides.toString(), 25.0, Colors.white, true)) :
+                Center(child: AutoText(diceRolls.getDiceCounts[diceRolls.getCustom].toString()
+                + "d" + diceRolls.getCustom.toString(), 25.0, Colors.white, true)),
           ])
       )
     );
