@@ -68,13 +68,13 @@ class _DiceRollerState extends State<DiceRoller> {
           )
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Row(
               children: diceRolls.getDiceButtons.sublist(0, 4)
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Row(
               children: diceRolls.getDiceButtons.sublist(4, 8)
           ),
@@ -104,7 +104,6 @@ class _DiceRollerState extends State<DiceRoller> {
                       child: AutoText("Roll", 25.0),
                       onPressed: () async {
                         diceRolls.rollAll();
-                        print(diceRolls.getDiceButtons.length);
 
                         for (var player in widget.audioPlayers) {
                           await player.stop();

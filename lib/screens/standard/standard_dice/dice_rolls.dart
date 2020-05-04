@@ -111,30 +111,32 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void onTap(DiceButton button) {
-    _diceCounts[button.getSides]++;
+    if ((_allRolls.length < 45)) {
+      _diceCounts[button.getSides]++;
 
-    _diceDisplays.add(
-        DiceDisplay(sides: button.getSides, index: _diceDisplays.length));
+      _diceDisplays.add(
+          DiceDisplay(sides: button.getSides, index: _diceDisplays.length));
 
-    setRows();
+      setRows();
 
-    _allRolls.add(_diceDisplays[_diceDisplays.length - 1].getRoll);
-    _totalRolls += _allRolls[_allRolls.length - 1];
+      _allRolls.add(_diceDisplays[_diceDisplays.length - 1].getRoll);
+      _totalRolls += _allRolls[_allRolls.length - 1];
 
-    _currentDice = "";
-    for (var key in _diceCounts.keys) {
-      if (key == -1)
-        _currentDie = "d?";
-      else
-        _currentDie = "d" + key.toString();
-      if (_diceCounts[key] != 0)
-        if (_currentDice == "")
-          _currentDice += _diceCounts[key].toString() + _currentDie;
+      _currentDice = "";
+      for (var key in _diceCounts.keys) {
+        if (key == -1)
+          _currentDie = "d?";
         else
-          _currentDice += " + " + _diceCounts[key].toString() + _currentDie;
+          _currentDie = "d" + key.toString();
+        if (_diceCounts[key] != 0)
+          if (_currentDice == "")
+            _currentDice += _diceCounts[key].toString() + _currentDie;
+          else
+            _currentDice += " + " + _diceCounts[key].toString() + _currentDie;
       }
       notifyListeners();
     }
+  }
 
   void rollAll() {
 
@@ -161,6 +163,7 @@ class DiceRolls extends ChangeNotifier {
     _currentDice = "";
     _currentRoll = 0;
     _totalRolls = _mod;
+    _allRolls.clear();
     for (var key in _diceCounts.keys) { _diceCounts[key] = 0; }
     _diceDisplays.clear();
     _rows.clear();

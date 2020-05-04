@@ -28,8 +28,8 @@ class DiceButton extends StatefulWidget {
     'd12long.ogg', 'd12Single.ogg', 'd12single_1.ogg',
     'd12single_2.ogg', 'd12single_3.ogg'];
   final List<String> d20Sounds = [
-    'd20Big.ogg', 'd20biglong.ogg', 'd20single_2.ogg', 'd20Small.ogg', 'd20small_1.ogg',
-    'd20smalllong.ogg', 'oopfuck.ogg'];
+    'd20Big.ogg', 'd20biglong.ogg', 'd20single_2.ogg', 'd20Small.ogg',
+    'd20small_1.ogg', 'd20smalllong.ogg'];
 
   final String d4Multiple = "d4Multiple.ogg";
   final String d6Multiple = "d6Multiple.ogg";
@@ -64,7 +64,6 @@ class DiceButton extends StatefulWidget {
   }
 
   Future<AudioPlayer> playMultiple() async {
-    print(_sides);
     if (_sides == 4)
       player = await cache.play(d4Multiple);
     else if (_sides == 6)

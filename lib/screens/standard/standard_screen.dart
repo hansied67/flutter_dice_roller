@@ -16,6 +16,7 @@ class _StandardScreenState extends State<StandardScreen> {
 
   int _page = 0;
   PageController _controller;
+  int _sides = 0;
 
   List<Widget> _screens = <Widget>[
     DiceRoller(),
@@ -26,8 +27,6 @@ class _StandardScreenState extends State<StandardScreen> {
     switch (value) {
       case 'Settings':
         Navigator.pushNamed(context, '/settings');
-        break;
-      case 'Custom Roll Sides':
         break;
     }
   }
@@ -45,15 +44,16 @@ class _StandardScreenState extends State<StandardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final diceRolls = Provider.of<DiceRolls>(context);
     return Scaffold(
       drawer: new Drawer(),
       appBar: AppBar(
         title: Text("Dice Roller"),
         actions: <Widget>[
           PopupMenuButton<String>(
-            onSelected:_onHamburger,
+            onSelected: _onHamburger,
             itemBuilder: (BuildContext context) {
-              return {'Settings', 'Custom Roll Sides'}.map((String choice) {
+              return {'Settings',}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
