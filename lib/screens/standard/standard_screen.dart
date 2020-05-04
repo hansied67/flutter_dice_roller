@@ -46,7 +46,35 @@ class _StandardScreenState extends State<StandardScreen> {
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
     return Scaffold(
-      drawer: new Drawer(),
+      drawer: new Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text("Screens"),
+            ),
+            ListTile(
+              title: Text("Dice Roller"),
+              onTap: () {
+                // you're already on this page!
+              }
+            ),
+            ListTile(
+                title: Text("Character"),
+                onTap: () {
+                  // TODO: go to character screen
+                }
+            ),
+            ListTile(
+                title: Text("DM Tools"),
+                onTap: () {
+                  // TODO: go to DM tools screen
+                }
+            )
+
+          ],
+        )
+      ),
       appBar: AppBar(
         title: Text("Dice Roller"),
         actions: <Widget>[

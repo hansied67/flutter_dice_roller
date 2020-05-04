@@ -87,6 +87,7 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void decDie(int sides, int index) {
+    _allRolls.removeAt(index);
     _diceCounts[sides]--;
     _totalRolls -= _diceDisplays.elementAt(index).getRoll;
     _diceDisplays.removeAt(index);
@@ -111,7 +112,8 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void onTap(DiceButton button) {
-    if ((_allRolls.length < 45)) {
+    if ((_allRolls.length < 50)) {
+      button.playSound();
       _diceCounts[button.getSides]++;
 
       _diceDisplays.add(

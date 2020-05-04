@@ -167,8 +167,6 @@ class _DiceButtonState extends State<DiceButton> {
         child: GestureDetector(
           onTap: () async {
             diceRolls.onTap(widget);
-            if (!diceRolls.getMute)
-              widget.playSound();
           },
           onLongPress: () async {
             if (widget._isCustom)
