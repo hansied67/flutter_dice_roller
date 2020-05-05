@@ -185,7 +185,8 @@ class _StandardScreenState extends State<StandardScreen> {
           // TODO: go to custom input screen
           _getInputDialog(context, diceRolls);
         },
-        child: Icon(Icons.add)
+        child: Icon(Icons.add),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
       ) : Container()
     );
   }
