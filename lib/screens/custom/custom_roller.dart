@@ -48,23 +48,26 @@ class _CustomRollerState extends State<CustomRoller> {
     return Container(
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text("ass", style: TextStyle(fontSize: 25.0))
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text("ass", style: TextStyle(fontSize: 25.0))
+                    )
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                        child: Text("hole", style: TextStyle(fontSize: 25.0))
+                    )
                   )
-                ),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                      child: Text("hole", style: TextStyle(fontSize: 25.0))
-                  )
-                )
-              ],
+                ],
+              )
             )
           ),
           Padding(
@@ -85,6 +88,7 @@ class _CustomRollerState extends State<CustomRoller> {
             )
           ),
           Expanded(
+            flex: 2,
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: items.length,

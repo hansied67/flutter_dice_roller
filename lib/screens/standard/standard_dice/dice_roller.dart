@@ -90,7 +90,7 @@ class _DiceRollerState extends State<DiceRoller> {
               Expanded(flex: 2, child: Padding(
                   padding: new EdgeInsets.all(7.5),
                   child: RaisedButton(
-                    child: AutoText("Clear", 25.0),
+                    child: AutoText("Clear", 20.0),
                     onPressed: () {
                       diceRolls.clear();
                     },
@@ -103,7 +103,7 @@ class _DiceRollerState extends State<DiceRoller> {
               Expanded(flex: 2, child: Padding(
                   padding: new EdgeInsets.all(7.5),
                   child: RaisedButton(
-                      child: AutoText("Roll", 25.0),
+                      child: AutoText("Roll", 20.0),
                       onPressed: () async {
                         diceRolls.rollAll();
 

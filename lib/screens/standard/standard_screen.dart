@@ -179,7 +179,14 @@ class _StandardScreenState extends State<StandardScreen> {
               DiceRoller(),
               CustomRoller(),
           ]
-      )
+      ),
+      floatingActionButton: _page == 1 ? FloatingActionButton(
+        onPressed: () {
+          // TODO: go to custom input screen
+          _getInputDialog(context, diceRolls);
+        },
+        child: Icon(Icons.add)
+      ) : Container()
     );
   }
 }
