@@ -112,8 +112,8 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void onTap(DiceButton button) {
-    //TODO: enable for web
-    // if ((_allRolls.length < 50)) {
+    // TODO: disable for non-web
+    if ((_allRolls.length < 40)) {
       if (!_mute)
         button.playSound();
       _diceCounts[button.getSides]++;
@@ -139,7 +139,7 @@ class DiceRolls extends ChangeNotifier {
             _currentDice += " + " + _diceCounts[key].toString() + _currentDie;
       }
       notifyListeners();
-    //}
+    }
   }
 
   void rollAll() {
