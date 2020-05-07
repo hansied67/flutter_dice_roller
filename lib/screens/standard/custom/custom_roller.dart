@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
 
 import 'dart:convert';
 
@@ -69,6 +70,7 @@ class _CustomRollerState extends State<CustomRoller> {
   @override
   Widget build(BuildContext context) {
     final customRolls = Provider.of<CustomRolls>(context);
+    final diceRolls = Provider.of<DiceRolls>(context);
     // initialItems = new Map<String, dynamic>.from(customRolls.items);
     return Container(
       child: Column(
@@ -79,46 +81,55 @@ class _CustomRollerState extends State<CustomRoller> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: <Widget>[
-                  // TODO: Row display
                   Expanded(
                     flex: 1,
                     child: Column(
                       children: customRolls.rows,
                     )
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.topRight,
-                            child: AutoSizeText(
-                                customRolls.currentName,
-                                style: TextStyle(fontSize: 20.0, color: Colors.cyan),
-                                textAlign: TextAlign.right,
-                                maxLines: 3,
-                            )
-                          )
-                        ),
-                        Expanded(
-                            child: Container(
-                                alignment: Alignment.bottomRight,
-                                child: AutoSizeText(
-                                    customRolls.currentResult,
-                                    style: TextStyle(fontSize: 40.0, color: Colors.cyanAccent),
-                                    textAlign: TextAlign.right,
-                                    maxLines: 1,
-                                    minFontSize: 25.0,
-                                )
-                            )
-                        ),
-                      ]
-                    )
-                  ),
                 ],
               )
             )
+          ),
+          Row(
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                      icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
+                      onPressed: () {
+                        setState(() {
+                          diceRolls.changeMute();
+                          customRolls.changeMute();
+                        });
+                      }
+                  )
+              ),
+              Expanded(
+                  child: Container(
+                      child: AutoSizeText(
+                        customRolls.currentName,
+                        style: TextStyle(fontSize: 20.0, color: Colors.cyan),
+                        textAlign: TextAlign.left,
+                        maxLines: 3,
+                      )
+                  )
+              ),
+              Expanded(
+                  child: Padding(
+                      padding: new EdgeInsets.only(right: 8.0),
+                      child: Container(
+                        child: AutoSizeText(
+                          customRolls.currentResult,
+                          style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent),
+                          textAlign: TextAlign.right,
+                          maxLines: 1,
+                          minFontSize: 25.0,
+                        )
+                      )
+                  )
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

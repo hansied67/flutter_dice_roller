@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_button.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_display.dart';
+import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
 import 'dart:math';
 
 class CustomRolls extends ChangeNotifier {
+  final diceRolls = DiceRolls();
   final regExpCount = new RegExp(r"(\d+)(?=d)");
   final regExpSides = new RegExp(r"(d)(\d+)");
   final regExpMinus = new RegExp(r"(\-)");
@@ -14,7 +16,7 @@ class CustomRolls extends ChangeNotifier {
   final regExpMod = new RegExp(r"(\d+)(?!.*\d)");
 
   final rng = new Random();
-  final _rowSize = 4;
+  final _rowSize = 5;
   List<Expanded> _rows = List<Expanded>();
 
   var _items = Map<String, dynamic>();
@@ -27,6 +29,16 @@ class CustomRolls extends ChangeNotifier {
   List<DiceDisplay> _diceDisplays = List<DiceDisplay>();
 
   int _custom = 2;
+  bool _mute = false;
+
+  CustomRolls() {
+    getItems();
+    notifyListeners();
+  }
+
+  void changeMute() {
+    _mute = !_mute;
+  }
 
   void doRoll() {
     /* Regexp stuff */
@@ -81,24 +93,26 @@ class CustomRolls extends ChangeNotifier {
     setRows();
 
     /* play sounds */
-    var soundMap = Map<int, int>();
-    for (var dice in _diceDisplays) {
-      var _sides = dice.getSides;
-      if (soundMap.keys.contains(_sides))
-        soundMap[_sides]++;
-      else
-        soundMap[_sides] = 1;
-    }
-    for (int key in soundMap.keys) {
-      DiceButton _button;
-      if ([4, 6, 8,  10, 12, 20].contains(sides))
-        _button = new DiceButton(sides: key, isCustom: false);
-      else
-        _button = new DiceButton(sides: key, isCustom: true);
-      if (soundMap[key] == 1)
-        _button.playSound();
-      else
-        _button.playMultiple();
+    if (!_mute) {
+      var soundMap = Map<int, int>();
+      for (var dice in _diceDisplays) {
+        var _sides = dice.getSides;
+        if (soundMap.keys.contains(_sides))
+          soundMap[_sides]++;
+        else
+          soundMap[_sides] = 1;
+      }
+      for (int key in soundMap.keys) {
+        DiceButton _button;
+        if ([4, 6, 8, 10, 12, 20].contains(sides))
+          _button = new DiceButton(sides: key, isCustom: false);
+        else
+          _button = new DiceButton(sides: key, isCustom: true);
+        if (soundMap[key] == 1)
+          _button.playSound();
+        else
+          _button.playMultiple();
+      }
     }
     /* /play sounds */
 
@@ -115,11 +129,6 @@ class CustomRolls extends ChangeNotifier {
     }
     if (i*_rowSize - _diceDisplays.length != 0)
       _rows.add((Expanded(flex: 1, child: Row(children: _diceDisplays.sublist(i*_rowSize, _diceDisplays.length)))));
-  }
-
-  CustomRolls() {
-    getItems();
-    notifyListeners();
   }
 
   void getItems() async {
@@ -140,6 +149,16 @@ class CustomRolls extends ChangeNotifier {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString('CustomSet', json.encode(_items));
     notifyListeners();
+  }
+
+  void clear() {
+    _currentName = "";
+    _currentType = "";
+    _currentRoll = "";
+    _currentResult = "";
+    _allRolls.clear();
+    _diceDisplays.clear();
+    _rows.clear();
   }
 
   void setCurrentName(String name) { _currentName = name; notifyListeners(); }

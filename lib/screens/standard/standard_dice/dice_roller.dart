@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/global_widgets/auto_text.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 import 'package:provider/provider.dart';
 
 import 'dice_button.dart';
@@ -25,6 +26,7 @@ class _DiceRollerState extends State<DiceRoller> {
   @override
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
+    final customRolls = Provider.of<CustomRolls>(context);
     return Column(
       children: <Widget>[
         Expanded(
@@ -45,6 +47,7 @@ class _DiceRollerState extends State<DiceRoller> {
                     onPressed: () {
                       setState(() {
                         diceRolls.changeMute();
+                        customRolls.changeMute();
                       });
                     },
                   )

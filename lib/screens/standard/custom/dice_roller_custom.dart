@@ -52,6 +52,7 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                       onPressed: () {
                         setState(() {
                           diceRolls.changeMute();
+                          customRolls.changeMute();
                         });
                       },
                     )
@@ -111,6 +112,7 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                             customRolls.setCurrentRoll(diceRolls.currentDice);
                             customRolls.addItem(customRolls.currentName, {customRolls.currentType: customRolls.currentRoll});
                             diceRolls.clearAll();
+                            customRolls.clear();
                           });
                           Navigator.of(context).pushReplacementNamed('/dice_1');
                         }

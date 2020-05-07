@@ -10,7 +10,6 @@ import 'package:flutterdiceroller/screens/standard/custom/dice_button_display.da
 
 class DiceRolls extends ChangeNotifier {
   final globalVariables = GlobalVariables();
-  final customRolls = CustomRolls();
   final _rowSize = 5;
 
   int _mod = 0;
