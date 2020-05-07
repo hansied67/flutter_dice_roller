@@ -9,15 +9,18 @@ import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 
 
 class StandardScreen extends StatefulWidget {
-  StandardScreen({Key key}) : super(key: key);
+  StandardScreen({Key key, this.page, this.pageController}) : super(key: key);
+
+  final int page;
+  final PageController pageController;
 
   @override
   _StandardScreenState createState() => _StandardScreenState();
 }
 
 class _StandardScreenState extends State<StandardScreen> {
-  int _page = 0;
-  PageController _controller = PageController(initialPage: 0, keepPage: true);
+  int _page;
+  PageController _controller;
   int _sides = 0;
   bool _validate = false;
 
@@ -140,6 +143,8 @@ class _StandardScreenState extends State<StandardScreen> {
   @override
   void initState() {
     super.initState();
+    _page = widget.page;
+    _controller = widget.pageController;
   }
   @override
   void dispose() {

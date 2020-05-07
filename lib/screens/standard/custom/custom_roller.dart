@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:convert';
@@ -68,7 +69,7 @@ class _CustomRollerState extends State<CustomRoller> {
   @override
   Widget build(BuildContext context) {
     final customRolls = Provider.of<CustomRolls>(context);
-    initialItems = new Map<String, dynamic>.from(customRolls.items);
+    // initialItems = new Map<String, dynamic>.from(customRolls.items);
     return Container(
       child: Column(
         children: <Widget>[
@@ -92,13 +93,24 @@ class _CustomRollerState extends State<CustomRoller> {
                         Expanded(
                           child: Container(
                             alignment: Alignment.topRight,
-                            child: Text(customRolls.currentName, style: TextStyle(fontSize: 15.0, color: Colors.cyan), textAlign: TextAlign.right)
+                            child: AutoSizeText(
+                                customRolls.currentName,
+                                style: TextStyle(fontSize: 20.0, color: Colors.cyan),
+                                textAlign: TextAlign.right,
+                                maxLines: 3,
+                            )
                           )
                         ),
                         Expanded(
                             child: Container(
                                 alignment: Alignment.bottomRight,
-                                child: Text(customRolls.currentResult, style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent))
+                                child: AutoSizeText(
+                                    customRolls.currentResult,
+                                    style: TextStyle(fontSize: 40.0, color: Colors.cyanAccent),
+                                    textAlign: TextAlign.right,
+                                    maxLines: 1,
+                                    minFontSize: 25.0,
+                                )
                             )
                         ),
                       ]

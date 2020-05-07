@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdiceroller/screens/standard/standard_dice/dice_button.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_display.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,6 +53,7 @@ class CustomRolls extends ChangeNotifier {
     _allRolls.clear();
     _diceDisplays.clear();
     int counter = 0;
+
     /* rolls */
     for (int i=0; i<counts.length; i++) {
       for (int num = 0; num<int.parse(counts[i]); num++) {
@@ -75,7 +77,31 @@ class CustomRolls extends ChangeNotifier {
     if (mod != "0") {
       _currentResult += "=${temp + int.parse(mod)}";
     }
+    /* /rolls */
     setRows();
+
+    /* play sounds */
+    var soundMap = Map<int, int>();
+    for (var dice in _diceDisplays) {
+      var _sides = dice.getSides;
+      if (soundMap.keys.contains(_sides))
+        soundMap[_sides]++;
+      else
+        soundMap[_sides] = 1;
+    }
+    for (int key in soundMap.keys) {
+      DiceButton _button;
+      if ([4, 6, 8,  10, 12, 20].contains(sides))
+        _button = new DiceButton(sides: key, isCustom: false);
+      else
+        _button = new DiceButton(sides: key, isCustom: true);
+      if (soundMap[key] == 1)
+        _button.playSound();
+      else
+        _button.playMultiple();
+    }
+    /* /play sounds */
+
     notifyListeners();
   }
 

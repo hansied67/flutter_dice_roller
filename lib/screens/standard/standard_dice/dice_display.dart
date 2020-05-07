@@ -26,6 +26,7 @@ class DiceDisplay extends StatefulWidget {
   }
 
   int get getRoll => _roll;
+  int get getSides => sides;
   Center get getRollDisplay => _rollDisplay;
 
   @override
