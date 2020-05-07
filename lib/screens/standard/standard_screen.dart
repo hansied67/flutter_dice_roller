@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
 import '../../global_variables.dart';
 import 'standard_dice/dice_roller.dart';
-import 'package:flutterdiceroller/screens/custom/custom_roller.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_roller.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 
 
 class StandardScreen extends StatefulWidget {
@@ -15,10 +16,10 @@ class StandardScreen extends StatefulWidget {
 }
 
 class _StandardScreenState extends State<StandardScreen> {
-
   int _page = 0;
   PageController _controller = PageController(initialPage: 0, keepPage: true);
   int _sides = 0;
+  bool _validate = false;
 
   Future<String> _getInputDialog(BuildContext context, var diceRolls) async {
     // final diceRolls = Provider.of<DiceRolls>(context);
@@ -55,6 +56,54 @@ class _StandardScreenState extends State<StandardScreen> {
                   child: Text('Ok'),
                   onPressed: () async {
                     Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  Future<String> _getInputDialogCustom(BuildContext context, var customRolls) async {
+    return showDialog<String>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Add a Custom Roll'),
+            content: SingleChildScrollView(
+                child: ListBody(
+                    children: <Widget>[
+                      new TextField(
+                        autofocus: true,
+                        decoration: new InputDecoration(
+                            labelText: 'Name', hintText: 'Potion of Healing',
+                            errorText: _validate ? "Value Can't Be Empty" : null,
+                        ),
+                        onChanged: (value) async {
+                          customRolls.setCurrentName(value);
+                        },
+                      ),
+                      new TextField(
+                        decoration: new InputDecoration(
+                            labelText: 'Type', hintText: 'Spell'),
+                        onChanged: (value) async {
+                          customRolls.setCurrentType(value);
+                        },
+                      ),
+                    ]
+                ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: Text('Input Dice'),
+                  onPressed: () async {
+                    if (customRolls.currentName.isEmpty)
+                      setState(() {
+                        _validate = true;
+                      });
+                    else
+                      Navigator.of(context).pushReplacementNamed('/dice_custom');
                   }
               )
             ],
@@ -102,6 +151,7 @@ class _StandardScreenState extends State<StandardScreen> {
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
     final globalVariables = Provider.of<GlobalVariables>(context);
+    final customRolls = Provider.of<CustomRolls>(context);
     return Scaffold(
       drawer: new Drawer(
         child: ListView(
@@ -183,7 +233,8 @@ class _StandardScreenState extends State<StandardScreen> {
       floatingActionButton: _page == 1 ? FloatingActionButton(
         onPressed: () {
           // TODO: go to custom input screen
-          _getInputDialog(context, diceRolls);
+          diceRolls.clear();
+          _getInputDialogCustom(context, customRolls);
         },
         child: Icon(Icons.add),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),

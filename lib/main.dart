@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdiceroller/screens/standard/settings/settings_screen.dart';
 import 'dart:io' show Platform;
 import 'package:provider/provider.dart';
 
 import 'package:flutterdiceroller/screens/standard/standard_screen.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
+import 'package:flutterdiceroller/screens/standard/custom/dice_roller_custom.dart';
+import 'package:flutterdiceroller/screens/standard/settings/settings_screen.dart';
 
 import 'global_variables.dart';
 
@@ -14,6 +16,7 @@ void main() {
         providers: [
           ChangeNotifierProvider(create: (context) => DiceRolls()),
           ChangeNotifierProvider(create: (context) => GlobalVariables()),
+          ChangeNotifierProvider(create: (context) => CustomRolls()),
         ],
         child: MyApp())
       );
@@ -50,6 +53,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
         '/dice': (context) => StandardScreen(),
+        '/dice_custom': (context) => DiceRollerCustom(),
         '/settings': (context) => SettingsScreen()
       }
     );

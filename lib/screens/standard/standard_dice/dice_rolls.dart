@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
-import 'dart:io';
 
 import 'dice_button.dart';
 import 'dice_display.dart';
 import 'package:flutterdiceroller/global_variables.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
+import 'package:flutterdiceroller/screens/standard/custom/dice_button_display.dart';
 
 class DiceRolls extends ChangeNotifier {
   final globalVariables = GlobalVariables();
+  final customRolls = CustomRolls();
   final _rowSize = 5;
 
   int _mod = 0;
-
   int _custom = 2;
-
   bool _mute = false;
   
   String _currentDie = "";
   String _currentDice = "";
-  int _currentRoll = 0;
   int _totalRolls = 0;
   List<int> _allRolls = List<int>();
   Map<int, int> _diceCounts = {4: 0, 6: 0, 8: 0, 10: 0, 12: 0, 20: 0, 100: 0};
@@ -31,6 +26,8 @@ class DiceRolls extends ChangeNotifier {
   List<DiceButton> _diceButtons = List<DiceButton>();
 
   List<DiceDisplay> _diceDisplays = List<DiceDisplay>();
+
+  List<DiceButtonDisplay> _diceButtonsDisplay = List<DiceButtonDisplay>();
   List<Expanded> _rows = List<Expanded>();  // rows of DiceDisplay
 
   var rng = new Random();
@@ -65,6 +62,14 @@ class DiceRolls extends ChangeNotifier {
   void changeMod(int change) {
     _mod += change;
     _totalRolls += change;
+    if (_currentDice[_currentDice.length-2] == '+' || _currentDice[_currentDice.length-2] == '-')
+      _currentDice = _currentDice.substring(0, _currentDice.length-2);
+    if (_mod > 0) {
+      _currentDice += "+$_mod";
+    }
+    else if (_mod < 0) {
+      _currentDice += "-${_mod*-1}";
+    }
     notifyListeners();
   }
 
@@ -72,6 +77,14 @@ class DiceRolls extends ChangeNotifier {
     _totalRolls -= _mod;
     _mod = change;
     _totalRolls += _mod;
+    if (_currentDice[_currentDice.length-2] == '+' || _currentDice[_currentDice.length-2] == '-')
+      _currentDice = _currentDice.substring(0, _currentDice.length-2);
+    if (_mod > 0) {
+      _currentDice += "+$_mod";
+    }
+    else if (_mod < 0) {
+      _currentDice += "-${_mod*-1}";
+    }
     notifyListeners();
   }
 
@@ -112,8 +125,7 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void onTap(DiceButton button) {
-    // TODO: disable for non-web
-    if ((_allRolls.length < 40)) {
+    if ((_allRolls.length < 40 || globalVariables.isMobile == false)) {
       if (!_mute)
         button.playSound();
       _diceCounts[button.getSides]++;
@@ -136,10 +148,50 @@ class DiceRolls extends ChangeNotifier {
           if (_currentDice == "")
             _currentDice += _diceCounts[key].toString() + _currentDie;
           else
-            _currentDice += " + " + _diceCounts[key].toString() + _currentDie;
+            _currentDice += "+" + _diceCounts[key].toString() + _currentDie;
+      }
+
+      _diceButtonsDisplay.clear();
+      for (int key in _diceCounts.keys) {
+        var _isCustom = ![4, 6, 8, 10, 12, 20, 100].contains(key);
+        if (_diceCounts[key] > 0) {
+          _diceButtonsDisplay.add(DiceButtonDisplay(
+              num: _diceCounts[key],
+              sides: key,
+              isCustom: _isCustom
+          ));
+        }
       }
       notifyListeners();
     }
+  }
+
+  void onTapDec(DiceButtonDisplay button) {
+    _diceCounts[button.getSides]--;
+    _diceButtonsDisplay.clear();
+    for (int key in _diceCounts.keys) {
+      var _isCustom = ![4, 6, 8, 10, 12, 20, 100].contains(key);
+      if (_diceCounts[key] > 0) {
+        _diceButtonsDisplay.add(DiceButtonDisplay(
+            num: _diceCounts[key],
+            sides: key,
+            isCustom: _isCustom
+        ));
+      }
+    }
+    _currentDice = "";
+    for (var key in _diceCounts.keys) {
+      if (key == -1)
+        _currentDie = "d?";
+      else
+        _currentDie = "d" + key.toString();
+      if (_diceCounts[key] != 0)
+        if (_currentDice == "")
+          _currentDice += _diceCounts[key].toString() + _currentDie;
+        else
+          _currentDice += " + " + _diceCounts[key].toString() + _currentDie;
+    }
+    notifyListeners();
   }
 
   void rollAll() {
@@ -165,12 +217,12 @@ class DiceRolls extends ChangeNotifier {
   void clear() {
     _currentDie = "";
     _currentDice = "";
-    _currentRoll = 0;
     _totalRolls = _mod;
     _allRolls.clear();
     for (var key in _diceCounts.keys) { _diceCounts[key] = 0; }
     _diceDisplays.clear();
     _rows.clear();
+    _diceButtonsDisplay.clear();
     notifyListeners();
   }
 
@@ -189,4 +241,6 @@ class DiceRolls extends ChangeNotifier {
   int get getTotalRolls => _totalRolls;
   bool get getMute => _mute;
   int get getCustom => _custom;
+  String get currentDice => _currentDice;
+  List<DiceButtonDisplay> get diceButtonsDisplay => _diceButtonsDisplay;
 }

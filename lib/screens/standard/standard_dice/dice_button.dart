@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/global_widgets/auto_text.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 import 'package:provider/provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -162,12 +163,14 @@ class _DiceButtonState extends State<DiceButton> {
   @override
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
+    final customRolls = Provider.of<CustomRolls>(context);
     return Expanded(
         flex: 1,
         child: GestureDetector(
           onTap: () async {
-            if (!widget._isCustom)
+            if (!widget._isCustom) {
               diceRolls.onTap(widget);
+            }
             else
               diceRolls.onTap(DiceButton(sides: diceRolls.getCustom, isCustom: true));
           },
