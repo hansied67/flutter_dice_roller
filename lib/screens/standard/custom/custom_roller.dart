@@ -5,6 +5,7 @@ import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart
 import 'dart:convert';
 
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import 'custom_rolls.dart';
 
@@ -124,7 +125,6 @@ class _CustomRollerState extends State<CustomRoller> {
                           style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent),
                           textAlign: TextAlign.right,
                           maxLines: 1,
-                          minFontSize: 25.0,
                         )
                       )
                   )
@@ -152,36 +152,49 @@ class _CustomRollerState extends State<CustomRoller> {
             flex: 2,
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: items.length,
+              itemCount: items.length+1,
               itemBuilder: (context, index) {
-                String key = items.keys.elementAt(index);
-                var value = items[key];
-                return Dismissible(
-                  key: Key(key),
-                  child: ListTile(
-                    title: Text(key),
-                    subtitle: Text(value.values.elementAt(0)),
-                    trailing: Text(value.keys.elementAt(0)),
-                    onTap: () {
-                      customRolls.setCurrentName(key);
-                      customRolls.setCurrentRoll(value.values.elementAt(0));
-                      customRolls.setCurrentType(value.keys.elementAt(0));
-                      customRolls.doRoll();
-                    }
-                  ),
-                  onDismissed: (direction) {
-                    setState(() {
-                      finalItems.remove(key);
-                      initialItems.remove(key);
-                      items.remove(key);
-                      customRolls.removeItem();
-                    });
-                    // Show a snackbar. This snackbar could also contain "Undo" actions.
-                    Scaffold
-                        .of(context)
-                        .showSnackBar(SnackBar(content: Text("$key dismissed")));
-                  },
-                );
+                if (index < items.length) {
+                  String key = items.keys.elementAt(index);
+                  var value = items[key];
+                  return Dismissible(
+                    key: Key(key),
+                    child: ListTile(
+                        title: Text(key),
+                        subtitle: Text(value.values.elementAt(0)),
+                        trailing: Text(value.keys.elementAt(0)),
+                        onTap: () {
+                          customRolls.setCurrentName(key);
+                          customRolls.setCurrentRoll(value.values.elementAt(0));
+                          customRolls.setCurrentType(value.keys.elementAt(0));
+                          customRolls.doRoll();
+                          setState(() {
+                            diceRolls.allInfo.add(Tuple4(
+                                customRolls.currentName,
+                                customRolls.currentRoll,
+                                customRolls.currentResult,
+                                new List<Expanded>.from(customRolls.rows)));
+                          });
+                        }
+                    ),
+                    onDismissed: (direction) {
+                      setState(() {
+                        finalItems.remove(key);
+                        initialItems.remove(key);
+                        items.remove(key);
+                        customRolls.removeItem();
+                      });
+                      // Show a snackbar. This snackbar could also contain "Undo" actions.
+                      /*Scaffold
+                          .of(context)
+                          .showSnackBar(SnackBar(content: Text(
+                          "$key dismissed"), duration: Duration(seconds: 1)));*/
+                    },
+                  );
+                }
+                else {
+                  return ListTile();
+                }
               }
             )
           )

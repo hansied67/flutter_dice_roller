@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuple/tuple.dart';
 import 'dart:math';
 
 import 'dice_button.dart';
@@ -15,12 +16,16 @@ class DiceRolls extends ChangeNotifier {
   int _mod = 0;
   int _custom = 2;
   bool _mute = false;
+  String _sortSelection = "Time";
   
   String _currentDie = "";
   String _currentDice = "";
   int _totalRolls = 0;
   List<int> _allRolls = List<int>();
   Map<int, int> _diceCounts = {4: 0, 6: 0, 8: 0, 10: 0, 12: 0, 20: 0, 100: 0};
+  var _allInfo = List<Tuple4<String, String, String, List<Expanded>>>();
+  var _allInfoTime = List<Tuple4<String, String, String, List<Expanded>>>();
+  var _historyInfo = Tuple3<String, String, List<Expanded>>("", "", List<Expanded>());
 
   List<DiceButton> _diceButtons = List<DiceButton>();
 
@@ -33,6 +38,7 @@ class DiceRolls extends ChangeNotifier {
 
   DiceRolls() {
     setDiceButtons();
+    getMuteFile();
   }
 
   void setDiceButtons() async {
@@ -53,8 +59,10 @@ class DiceRolls extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeMute() {
+  void changeMute() async {
     _mute = !_mute;
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('Mute', _mute);
     notifyListeners();
   }
 
@@ -198,10 +206,16 @@ class DiceRolls extends ChangeNotifier {
     _allRolls.clear();
     _diceDisplays.clear();
 
+    _currentDice = "";
     _totalRolls = _mod;
 
     int count = 0;
     for (int key in _diceCounts.keys) {
+      if (_diceCounts[key] != 0)
+        if (_currentDice == "")
+          _currentDice += "${_diceCounts[key]}d$key";
+        else
+          _currentDice += "+${_diceCounts[key]}d$key";
       for (int i=0; i<_diceCounts[key]; i++) {
         _diceDisplays.add(DiceDisplay(sides: key, index: count));
         _allRolls.add(_diceDisplays[_diceDisplays.length-1].getRoll);
@@ -209,7 +223,19 @@ class DiceRolls extends ChangeNotifier {
         count++;
       }
     }
+
+    if (_mod > 0)
+      _currentDice += "+$_mod";
+    else if (_mod < 0)
+      _currentDice += "-$_mod";
+    print(_currentDice);
+    print(_totalRolls);
+
     setRows();
+
+    _allInfoTime.add(Tuple4("Roll", _currentDice, _totalRolls.toString(), new List<Expanded>.from(_rows)));
+    _allInfo.add(Tuple4("Roll", _currentDice, _totalRolls.toString(), new List<Expanded>.from(_rows)));
+
     notifyListeners();
   }
 
@@ -231,6 +257,37 @@ class DiceRolls extends ChangeNotifier {
     clear();
   }
 
+  void setHistoryInfo(Tuple4<String, String, String, List<Expanded>> info) {
+    _historyInfo = Tuple3(info.item1, info.item3.toString(), info.item4);
+    notifyListeners();
+  }
+
+  void clearAllInfo() {
+    _allInfo.clear();
+    _historyInfo = Tuple3("", "", List<Expanded>());
+    notifyListeners();
+  }
+
+  void sort(String method) {
+    _sortSelection = method;
+    if (method == "Time") {
+      _allInfo.clear();
+      _allInfo = _allInfoTime;
+    }
+
+    if (method == "Roll") {
+      _allInfo.sort((a, b) => a.item2.compareTo(b.item2));
+    }
+
+    notifyListeners();
+  }
+
+  void getMuteFile() async {
+    var prefs = await SharedPreferences.getInstance();
+    _mute = prefs.getBool('Mute') ?? false;
+    notifyListeners();
+  }
+
   int get getCurrentRoll => _totalRolls;
   Map<int, int> get getDiceCounts => _diceCounts;
   List<DiceDisplay> get getDiceDisplays => _diceDisplays;
@@ -242,4 +299,7 @@ class DiceRolls extends ChangeNotifier {
   int get getCustom => _custom;
   String get currentDice => _currentDice;
   List<DiceButtonDisplay> get diceButtonsDisplay => _diceButtonsDisplay;
+  List<Tuple4<String, String, String, List<Expanded>>> get allInfo => _allInfo;
+  Tuple3<String, String, List<Expanded>> get historyInfo => _historyInfo;
+  String get sortSelection => _sortSelection;
 }

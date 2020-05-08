@@ -33,11 +33,15 @@ class CustomRolls extends ChangeNotifier {
 
   CustomRolls() {
     getItems();
+
+    getMuteFile();
+
     notifyListeners();
   }
 
   void changeMute() {
     _mute = !_mute;
+    notifyListeners();
   }
 
   void doRoll() {
@@ -148,6 +152,12 @@ class CustomRolls extends ChangeNotifier {
   void removeItem() async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString('CustomSet', json.encode(_items));
+    notifyListeners();
+  }
+
+  void getMuteFile() async {
+    var prefs = await SharedPreferences.getInstance();
+    _mute = prefs.getBool('Mute') ?? false;
     notifyListeners();
   }
 

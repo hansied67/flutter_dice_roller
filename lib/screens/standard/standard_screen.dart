@@ -124,6 +124,8 @@ class _StandardScreenState extends State<StandardScreen> {
         _getInputDialog(context, diceRolls);
         diceRolls.setDiceButtons();
         break;
+      case 'Roll History':
+        Navigator.pushNamed(context, '/history');
     }
   }
 
@@ -200,7 +202,7 @@ class _StandardScreenState extends State<StandardScreen> {
           PopupMenuButton<String>(
             onSelected: (String value) {_onHamburger(value, context, diceRolls);},
             itemBuilder: (BuildContext context) {
-              return {'Settings','Custom Die'}.map((String choice) {
+              return {'Settings','Custom Die','Roll History'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),

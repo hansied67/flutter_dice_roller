@@ -27,6 +27,7 @@ class _DiceRollerState extends State<DiceRoller> {
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
     final customRolls = Provider.of<CustomRolls>(context);
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -118,12 +119,16 @@ class _DiceRollerState extends State<DiceRoller> {
                         if (!diceRolls.getMute) {
                           for (int key in diceRolls.getDiceCounts.keys) {
                             if (diceRolls.getDiceCounts[key] == 1) {
-                              widget.audioPlayers.add(await diceRolls
-                                  .getDiceButtons[count].playSound());
+                              setState(() async {
+                                widget.audioPlayers.add(await diceRolls
+                                    .getDiceButtons[count].playSound());
+                              });
                             }
                             else if (diceRolls.getDiceCounts[key] > 1) {
-                              widget.audioPlayers.add(await diceRolls
-                                  .getDiceButtons[count].playMultiple());
+                              setState(() async {
+                                widget.audioPlayers.add(await diceRolls
+                                    .getDiceButtons[count].playMultiple());
+                              });
                             }
                             count++;
                           }

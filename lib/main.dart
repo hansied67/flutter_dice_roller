@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdiceroller/screens/standard/history/history_screen.dart';
 import 'dart:io' show Platform;
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
         '/dice': (context) => StandardScreen(page: 0, pageController: PageController(initialPage: 0, keepPage: true)),
         '/dice_1': (context) => StandardScreen(page: 1, pageController: PageController(initialPage: 1, keepPage: true)),
         '/dice_custom': (context) => DiceRollerCustom(),
-        '/settings': (context) => SettingsScreen()
+        '/settings': (context) => SettingsScreen(),
+        '/history': (context) => HistoryScreen()
       }
     );
   }
