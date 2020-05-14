@@ -150,9 +150,10 @@ class _CustomRollerState extends State<CustomRoller> {
           ),
           Expanded(
             flex: 2,
-            child: ListView.builder(
+            child: ListView.separated(
               shrinkWrap: true,
               itemCount: items.length+1,
+              separatorBuilder: (BuildContext context, int index) => new Divider(),
               itemBuilder: (context, index) {
                 if (index < items.length) {
                   String key = items.keys.elementAt(index);
@@ -169,6 +170,11 @@ class _CustomRollerState extends State<CustomRoller> {
                           customRolls.setCurrentType(value.keys.elementAt(0));
                           customRolls.doRoll();
                           setState(() {
+                            diceRolls.allInfoTime.add(Tuple4(
+                                customRolls.currentName,
+                                customRolls.currentRoll,
+                                customRolls.currentResult,
+                                new List<Expanded>.from(customRolls.rows)));
                             diceRolls.allInfo.add(Tuple4(
                                 customRolls.currentName,
                                 customRolls.currentRoll,

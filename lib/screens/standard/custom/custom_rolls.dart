@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_button.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_display.dart';
@@ -31,6 +32,8 @@ class CustomRolls extends ChangeNotifier {
   int _custom = 2;
   bool _mute = false;
 
+  List<AudioPlayer> audioPlayers = new List<AudioPlayer>();
+
   CustomRolls() {
     getItems();
 
@@ -44,7 +47,8 @@ class CustomRolls extends ChangeNotifier {
     notifyListeners();
   }
 
-  void doRoll() {
+  void doRoll() async {
+
     /* Regexp stuff */
     var counts = regExpCount.allMatches(_currentRoll).map((m) => m[0]).toList();
     var sides = regExpSides.allMatches(_currentRoll).map((m) => m[0]).toList();
@@ -96,6 +100,10 @@ class CustomRolls extends ChangeNotifier {
     /* /rolls */
     setRows();
 
+    for (var player in audioPlayers) {
+      await player.stop();
+    }
+
     /* play sounds */
     if (!_mute) {
       var soundMap = Map<int, int>();
@@ -113,9 +121,10 @@ class CustomRolls extends ChangeNotifier {
         else
           _button = new DiceButton(sides: key, isCustom: true);
         if (soundMap[key] == 1)
-          _button.playSound();
+          ;
+          //audioPlayers.add(await _button.playSound());
         else
-          _button.playMultiple();
+          audioPlayers.add(await _button.playMultiple());
       }
     }
     /* /play sounds */

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
@@ -17,6 +18,7 @@ class DiceRolls extends ChangeNotifier {
   int _custom = 2;
   bool _mute = false;
   String _sortSelection = "Time";
+  String _sortBy = "Ascending";
   
   String _currentDie = "";
   String _currentDice = "";
@@ -33,6 +35,8 @@ class DiceRolls extends ChangeNotifier {
 
   List<DiceButtonDisplay> _diceButtonsDisplay = List<DiceButtonDisplay>();
   List<Expanded> _rows = List<Expanded>();  // rows of DiceDisplay
+
+  List<AudioPlayer> audioPlayers = new List<AudioPlayer>();
 
   var rng = new Random();
 
@@ -69,14 +73,21 @@ class DiceRolls extends ChangeNotifier {
   void changeMod(int change) {
     _mod += change;
     _totalRolls += change;
-    if (_currentDice[_currentDice.length-2] == '+' || _currentDice[_currentDice.length-2] == '-')
-      _currentDice = _currentDice.substring(0, _currentDice.length-2);
+    try {
+      if (_currentDice[_currentDice.length - 2] == '+' ||
+          _currentDice[_currentDice.length - 2] == '-')
+        _currentDice = _currentDice.substring(0, _currentDice.length - 2);
+    } catch (e) {
+      print('not long enough');
+    }
     if (_mod > 0) {
       _currentDice += "+$_mod";
     }
     else if (_mod < 0) {
       _currentDice += "-${_mod*-1}";
     }
+    else
+      _currentDice += _mod.toString();
     notifyListeners();
   }
 
@@ -264,28 +275,57 @@ class DiceRolls extends ChangeNotifier {
 
   void clearAllInfo() {
     _allInfo.clear();
+    _allInfoTime.clear();
     _historyInfo = Tuple3("", "", List<Expanded>());
     notifyListeners();
   }
 
-  void sort(String method) {
+  void sortBy(String method, {bool shouldUpdate: true}) {
+    _sortBy = method;
+    sort(_sortSelection, shouldUpdate: shouldUpdate);
+  }
+
+  void sort(String method, {bool shouldUpdate: true}) {
     _sortSelection = method;
     if (method == "Time") {
-      _allInfo.clear();
       _allInfo = _allInfoTime;
     }
-
     if (method == "Roll") {
-      _allInfo.sort((a, b) => a.item2.compareTo(b.item2));
+      _allInfo.sort((a, b) => a.item2.length.compareTo(b.item2.length));
+    }
+    if (method == "Result") {
+      _allInfo.sort((a, b) => int.parse(a.item3).compareTo(int.parse(b.item3)));
     }
 
-    notifyListeners();
+    if (_sortBy == "Descending")
+      _allInfo = _allInfo.reversed.toList();
+
+    if (shouldUpdate) notifyListeners();
   }
 
   void getMuteFile() async {
     var prefs = await SharedPreferences.getInstance();
     _mute = prefs.getBool('Mute') ?? false;
     notifyListeners();
+  }
+
+  void playDiceSounds() async {
+    for (var player in audioPlayers) {
+      await player.stop();
+    }
+    audioPlayers.clear();
+    int count = 0;
+    if (!_mute) {
+      for (int key in _diceCounts.keys) {
+        if (_diceCounts[key] == 1) {
+          audioPlayers.add(await _diceButtons[count].playSound());
+        }
+        else if (_diceCounts[key] > 1) {
+          audioPlayers.add(await _diceButtons[count].playMultiple());
+        }
+        count++;
+      }
+    }
   }
 
   int get getCurrentRoll => _totalRolls;
@@ -300,6 +340,8 @@ class DiceRolls extends ChangeNotifier {
   String get currentDice => _currentDice;
   List<DiceButtonDisplay> get diceButtonsDisplay => _diceButtonsDisplay;
   List<Tuple4<String, String, String, List<Expanded>>> get allInfo => _allInfo;
+  List<Tuple4<String, String, String, List<Expanded>>> get allInfoTime => _allInfoTime;
   Tuple3<String, String, List<Expanded>> get historyInfo => _historyInfo;
   String get sortSelection => _sortSelection;
+  String get ascendingDescending => _sortBy;
 }

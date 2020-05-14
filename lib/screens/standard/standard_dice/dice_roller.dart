@@ -11,8 +11,6 @@ import 'mod_box.dart';
 class DiceRoller extends StatefulWidget {
   List<DiceButton> buttons = List<DiceButton>();
 
-  List<AudioPlayer> audioPlayers = new List<AudioPlayer>();
-
   @override
   _DiceRollerState createState() => _DiceRollerState();
 }
@@ -108,33 +106,16 @@ class _DiceRollerState extends State<DiceRoller> {
                   padding: new EdgeInsets.all(7.5),
                   child: RaisedButton(
                       child: AutoText("Roll", 20.0),
-                      onPressed: () async {
+                      onPressed: () {
                         diceRolls.rollAll();
 
-                        for (var player in widget.audioPlayers) {
-                          await player.stop();
+                        try {
+                          diceRolls.playDiceSounds();
+                        } on Exception {
+                          print('ass');
+                        } catch (e) {
+                          print('ass');
                         }
-
-                        int count = 0;
-                        if (!diceRolls.getMute) {
-                          for (int key in diceRolls.getDiceCounts.keys) {
-                            if (diceRolls.getDiceCounts[key] == 1) {
-                              setState(() async {
-                                widget.audioPlayers.add(await diceRolls
-                                    .getDiceButtons[count].playSound());
-                              });
-                            }
-                            else if (diceRolls.getDiceCounts[key] > 1) {
-                              setState(() async {
-                                widget.audioPlayers.add(await diceRolls
-                                    .getDiceButtons[count].playMultiple());
-                              });
-                            }
-                            count++;
-                          }
-                        }
-                        else
-                          print(diceRolls.getDiceCounts);
                       }
                   )
               )),

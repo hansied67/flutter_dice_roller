@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
-import 'package:tuple/tuple.dart';
 
 class HistoryScreen extends StatefulWidget {
   HistoryScreen({Key key}) : super(key: key);
@@ -14,11 +13,18 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   String dropdownValue = "Time";
-  String ascendingDescending = "Descending";
+  String ascendingDescending = "Ascending";
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final diceRolls = Provider.of<DiceRolls>(context);
+    diceRolls.sortBy(diceRolls.ascendingDescending, shouldUpdate: false);
+    super.didChangeDependencies();
   }
 
   @override
@@ -84,7 +90,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         child: Container(
                             alignment: Alignment.centerRight,
                             child: DropdownButton<String>(
-                              value: ascendingDescending,
+                              value: diceRolls.ascendingDescending,
                               icon: ascendingDescending == "Descending" ?
                               Icon(Icons.arrow_downward) :Icon(Icons.arrow_upward),
                               iconSize: 24,
@@ -97,8 +103,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 setState(() {
                                   ascendingDescending = newValue;
                                 });
+                                diceRolls.sortBy(ascendingDescending);
                               },
-                              items: <String>['Descending', 'Ascending']
+                              items: <String>['Ascending', 'Descending']
                                   .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
@@ -146,10 +153,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
               )
             ),
             Expanded(
-              flex: 9,
-              child: ListView.builder(
+              flex: 7,
+              child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: diceRolls.allInfo.length+1,
+                separatorBuilder: (BuildContext context, int index) => new Divider(),
                 itemBuilder: (context, index) {
                   if (index < diceRolls.allInfo.length) {
                     var info = diceRolls.allInfo[index];
