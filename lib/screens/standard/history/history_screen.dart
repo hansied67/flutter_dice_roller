@@ -24,6 +24,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void didChangeDependencies() {
     final diceRolls = Provider.of<DiceRolls>(context);
     diceRolls.sortBy(diceRolls.ascendingDescending, shouldUpdate: false);
+    print(diceRolls.allInfo);
     super.didChangeDependencies();
   }
 
@@ -81,7 +82,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
             Expanded(
               flex: 1,
-              child: Padding(
+              child: Material(color: Color(0xFF202020), child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
                   children: <Widget> [
@@ -150,11 +151,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   ]
                 )
-              )
+              ))
             ),
             Expanded(
               flex: 7,
-              child: ListView.separated(
+              child: Material(color: Color(0xFF202020), child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: diceRolls.allInfo.length+1,
                 separatorBuilder: (BuildContext context, int index) => new Divider(),
@@ -183,7 +184,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     return ListTile();
                   }
                 }
-              )
+              ))
             )
           ]
         ),

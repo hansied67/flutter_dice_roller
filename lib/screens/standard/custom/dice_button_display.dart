@@ -30,7 +30,7 @@ class _DiceButtonDisplayState extends State<DiceButtonDisplay> {
     final diceRolls = Provider.of<DiceRolls>(context);
     return Expanded(
         flex: 1,
-        child: GestureDetector(
+        child: InkWell(
             onTap: () async {
               print('a');
               if (!widget._isCustom) {
@@ -56,9 +56,10 @@ class _DiceButtonDisplayState extends State<DiceButtonDisplay> {
               ),
               !(widget._isCustom) ? Center(child: AutoText(diceRolls.getDiceCounts[widget._sides].toString()
                   + "d" + widget._sides.toString(), 25.0, Colors.white, true)) :
-              Center(child: AutoText(diceRolls.getDiceCounts[diceRolls.getCustom].toString()
-                  + "d" + diceRolls.getCustom.toString(), 25.0, Colors.white, true)),
-            ])
+              Center(child: AutoText(diceRolls.getDiceCounts[widget._sides].toString()
+                  + "d" + widget._sides.toString(), 25.0, Colors.white, true)),
+            ]
+          )
         )
     );
   }

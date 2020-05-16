@@ -288,7 +288,7 @@ class DiceRolls extends ChangeNotifier {
   void sort(String method, {bool shouldUpdate: true}) {
     _sortSelection = method;
     if (method == "Time") {
-      _allInfo = _allInfoTime;
+      _allInfo = new List<Tuple4<String, String, String, List<Expanded>>>.from(_allInfoTime);
     }
     if (method == "Roll") {
       _allInfo.sort((a, b) => a.item2.length.compareTo(b.item2.length));

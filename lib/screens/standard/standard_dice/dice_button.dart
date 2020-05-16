@@ -166,7 +166,8 @@ class _DiceButtonState extends State<DiceButton> {
     final customRolls = Provider.of<CustomRolls>(context);
     return Expanded(
         flex: 1,
-        child: GestureDetector(
+        child: InkWell(
+          splashColor: Color(0xFF2a2a2a),
           onTap: () async {
             if (!widget._isCustom) {
               diceRolls.onTap(widget);

@@ -36,90 +36,102 @@ class _DiceRollerState extends State<DiceRoller> {
         ),
         Expanded(
           flex: 2,
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  child: IconButton(
-                    icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
-                    onPressed: () {
-                      setState(() {
-                        diceRolls.changeMute();
-                        customRolls.changeMute();
-                      });
-                    },
+          child: Material(
+              // color: Color(0xFF202020),
+              child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    child: IconButton(
+                      icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
+                      onPressed: () {
+                        setState(() {
+                          diceRolls.changeMute();
+                          customRolls.changeMute();
+                        });
+                      },
+                    )
                   )
-                )
-              ),
-              Expanded(
-                flex: 6,
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  padding: new EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
-                    "Total: " + diceRolls.getTotalRolls.toString(),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        fontSize: 25.0
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    padding: new EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      "Total: " + diceRolls.getTotalRolls.toString(),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          fontSize: 25.0
+                      )
                     )
                   )
                 )
-              )
-            ]
+              ]
+            )
           )
         ),
         Expanded(
           flex: 3,
-          child: Row(
+          child: Material(
+              color: Color(0xFF202020),
+              child: Row(
               children: diceRolls.getDiceButtons.length != 0 ?
                   diceRolls.getDiceButtons.sublist(0, 4) : [Container()]
-          ),
+              )
+          )
         ),
         Expanded(
-          flex: 3,
-          child: Row(
-              children: diceRolls.getDiceButtons.length != 0 ?
-              diceRolls.getDiceButtons.sublist(4, 8) : [Container()]
-          ),
+            flex: 3,
+            child: Material(
+                color: Color(0xFF202020),
+                child: Row(
+                    children: diceRolls.getDiceButtons.length != 0 ?
+                    diceRolls.getDiceButtons.sublist(4, 8) : [Container()]
+                )
+            )
         ),
         Expanded(
           flex: 2,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Expanded(flex: 2, child: Padding(
-                  padding: new EdgeInsets.all(7.5),
-                  child: RaisedButton(
-                    child: AutoText("Clear", 20.0),
-                    onPressed: () {
-                      diceRolls.clear();
-                    },
-                    onLongPress: () async {
-                      diceRolls.clearAll();
-                    }
-                  )
-              )),
-              Expanded(flex: 3,child: ModBox()),
-              Expanded(flex: 2, child: Padding(
-                  padding: new EdgeInsets.all(7.5),
-                  child: RaisedButton(
-                      child: AutoText("Roll", 20.0),
+          child: Material(
+              color: Color(0xFF202020),
+              child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Expanded(flex: 2, child: Padding(
+                    padding: new EdgeInsets.all(7.5),
+                    child: RaisedButton(
+                      child: AutoText("Clear", 20.0),
                       onPressed: () {
-                        diceRolls.rollAll();
-
-                        try {
-                          diceRolls.playDiceSounds();
-                        } on Exception {
-                          print('ass');
-                        } catch (e) {
-                          print('ass');
-                        }
+                        diceRolls.clear();
+                      },
+                      onLongPress: () async {
+                        diceRolls.clearAll();
                       }
-                  )
-              )),
-            ],
+                    )
+                )),
+                Expanded(flex: 3,child: ModBox()),
+                Expanded(flex: 2, child: Padding(
+                    padding: new EdgeInsets.all(7.5),
+                    child: RaisedButton(
+                        child: AutoText("Roll", 20.0),
+                        onPressed: () {
+                          diceRolls.rollAll();
+
+                          try {
+                            diceRolls.playDiceSounds();
+                          } on Exception {
+                            print('ass');
+                          } catch (e) {
+                            print('ass');
+                          }
+                        }
+                    )
+                )),
+              ],
+            )
           )
         )
       ],

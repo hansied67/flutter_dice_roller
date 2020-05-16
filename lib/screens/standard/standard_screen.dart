@@ -214,6 +214,7 @@ class _StandardScreenState extends State<StandardScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _page,
+        backgroundColor: Color(0xFF202020),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -56,6 +56,20 @@ class _ModBoxState extends State<ModBox> {
     return Stack(
       children: <Widget> [
         Padding(
+          padding: new EdgeInsets.only(left: 15.0),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: Icon(Icons.remove, color: Colors.red)
+          )
+        ),
+        Padding(
+            padding: new EdgeInsets.only(right: 15.0),
+          child: Container(
+            alignment: Alignment.centerRight,
+            child: Icon(Icons.add, color: Colors.green)
+          )
+        ),
+        Padding(
           padding: new EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,8 +78,13 @@ class _ModBoxState extends State<ModBox> {
               Expanded(
                   child: Container(
                     // color: Color(0x9b5bf6bff),
-                      child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
+                      child: InkWell(
+                          borderRadius: new BorderRadius.only(
+                            topLeft: const Radius.circular(8.0),
+                            bottomLeft: const Radius.circular(8.0)
+                          ),
+                          splashColor: Colors.red,
+                          // behavior: HitTestBehavior.opaque,
                           onTap: () async {
                             diceRolls.changeMod(-1);
                           },
@@ -75,15 +94,12 @@ class _ModBoxState extends State<ModBox> {
                           // child: Icon(Icons.remove)
                       ),
                       decoration: new BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            colors: [Colors.deepPurple, Colors.purpleAccent],
-                            tileMode: TileMode.repeated,
-                          ),
-                          // color: Color(0x9b5bf6bff),
                           borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(40.0),
-                            bottomLeft: const Radius.circular(40.0),
+                            topLeft: const Radius.circular(8.0),
+                            bottomLeft: const Radius.circular(8.0),
+                          ),
+                          border: Border.all(
+                            color: Colors.red,
                           )
                       )
                   )
@@ -91,8 +107,12 @@ class _ModBoxState extends State<ModBox> {
               Expanded(
                   child: Container(
                     // color: Color(0x9b5bf6bff),
-                      child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
+                      child: InkWell(
+                        borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(8.0),
+                          bottomLeft: const Radius.circular(8.0)
+                        ),
+                        splashColor: Colors.green,
                           onTap: () async {
                             diceRolls.changeMod(1);
                           },
@@ -102,15 +122,13 @@ class _ModBoxState extends State<ModBox> {
                           // child: Icon(Icons.add)
                       ),
                       decoration: new BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            colors: [Colors.purpleAccent, Colors.deepPurple],
-                            tileMode: TileMode.repeated,
-                          ),
                           // color: Color(0x9b5bf6bff),
                           borderRadius: new BorderRadius.only(
-                            topRight: const Radius.circular(40.0),
-                            bottomRight: const Radius.circular(40.0),
+                            topRight: const Radius.circular(8.0),
+                            bottomRight: const Radius.circular(8.0),
+                          ),
+                          border: Border.all(
+                            color: Colors.green,
                           )
                       )
                   )

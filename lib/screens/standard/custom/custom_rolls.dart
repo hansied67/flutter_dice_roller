@@ -121,8 +121,7 @@ class CustomRolls extends ChangeNotifier {
         else
           _button = new DiceButton(sides: key, isCustom: true);
         if (soundMap[key] == 1)
-          ;
-          //audioPlayers.add(await _button.playSound());
+          audioPlayers.add(await _button.playSound());
         else
           audioPlayers.add(await _button.playMultiple());
       }

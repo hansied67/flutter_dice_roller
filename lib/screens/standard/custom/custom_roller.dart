@@ -77,7 +77,7 @@ class _CustomRollerState extends State<CustomRoller> {
       child: Column(
         children: <Widget>[
           Expanded(
-            flex: 1,
+            flex: 2,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -131,7 +131,7 @@ class _CustomRollerState extends State<CustomRoller> {
               ),
             ],
           ),
-          Padding(
+          Material(color: Color(0xFF202020), child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               onChanged: (value) {
@@ -147,10 +147,10 @@ class _CustomRollerState extends State<CustomRoller> {
                 )
               )
             )
-          ),
+          )),
           Expanded(
-            flex: 2,
-            child: ListView.separated(
+            flex: 3,
+            child: Material(color: Color(0xFF202020), child: ListView.separated(
               shrinkWrap: true,
               itemCount: items.length+1,
               separatorBuilder: (BuildContext context, int index) => new Divider(),
@@ -202,7 +202,7 @@ class _CustomRollerState extends State<CustomRoller> {
                   return ListTile();
                 }
               }
-            )
+            ))
           )
         ],
       )
