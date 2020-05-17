@@ -182,15 +182,17 @@ class _CustomRollerState extends State<CustomRoller> {
                           customRolls.setCurrentType(value.keys.elementAt(0));
                           customRolls.doRoll();
                           setState(() {
-                            diceRolls.allInfoTime.add(Tuple4(
+                            diceRolls.allInfoTime.add(Tuple5(
                                 customRolls.currentName,
                                 customRolls.currentRoll,
                                 customRolls.currentResult,
+                                customRolls.currentResultInt.toString(),
                                 new List<Expanded>.from(customRolls.rows)));
-                            diceRolls.allInfo.add(Tuple4(
+                            diceRolls.allInfo.add(Tuple5(
                                 customRolls.currentName,
                                 customRolls.currentRoll,
                                 customRolls.currentResult,
+                                customRolls.currentResultInt.toString(),
                                 new List<Expanded>.from(customRolls.rows)));
                           });
                         }

@@ -25,8 +25,8 @@ class DiceRolls extends ChangeNotifier {
   int _totalRolls = 0;
   List<int> _allRolls = List<int>();
   Map<int, int> _diceCounts = {4: 0, 6: 0, 8: 0, 10: 0, 12: 0, 20: 0, 100: 0};
-  var _allInfo = List<Tuple4<String, String, String, List<Expanded>>>();
-  var _allInfoTime = List<Tuple4<String, String, String, List<Expanded>>>();
+  var _allInfo = List<Tuple5<String, String, String, String, List<Expanded>>>();
+  var _allInfoTime = List<Tuple5<String, String, String, String, List<Expanded>>>();
   var _historyInfo = Tuple3<String, String, List<Expanded>>("", "", List<Expanded>());
 
   List<DiceButton> _diceButtons = List<DiceButton>();
@@ -244,8 +244,8 @@ class DiceRolls extends ChangeNotifier {
 
     setRows();
 
-    _allInfoTime.add(Tuple4("Roll", _currentDice, _totalRolls.toString(), new List<Expanded>.from(_rows)));
-    _allInfo.add(Tuple4("Roll", _currentDice, _totalRolls.toString(), new List<Expanded>.from(_rows)));
+    _allInfoTime.add(Tuple5("Roll", _currentDice, _totalRolls.toString(), _totalRolls.toString(), new List<Expanded>.from(_rows)));
+    _allInfo.add(Tuple5("Roll", _currentDice, _totalRolls.toString(), _totalRolls.toString(), new List<Expanded>.from(_rows)));
 
     notifyListeners();
   }
@@ -268,8 +268,8 @@ class DiceRolls extends ChangeNotifier {
     clear();
   }
 
-  void setHistoryInfo(Tuple4<String, String, String, List<Expanded>> info) {
-    _historyInfo = Tuple3(info.item1, info.item3.toString(), info.item4);
+  void setHistoryInfo(Tuple5<String, String, String, String, List<Expanded>> info) {
+    _historyInfo = Tuple3(info.item1, info.item3.toString(), info.item5);
     notifyListeners();
   }
 
@@ -288,13 +288,13 @@ class DiceRolls extends ChangeNotifier {
   void sort(String method, {bool shouldUpdate: true}) {
     _sortSelection = method;
     if (method == "Time") {
-      _allInfo = new List<Tuple4<String, String, String, List<Expanded>>>.from(_allInfoTime);
+      _allInfo = new List<Tuple5<String, String, String, String, List<Expanded>>>.from(_allInfoTime);
     }
     if (method == "Roll") {
       _allInfo.sort((a, b) => a.item2.length.compareTo(b.item2.length));
     }
     if (method == "Result") {
-      _allInfo.sort((a, b) => int.parse(a.item3).compareTo(int.parse(b.item3)));
+      _allInfo.sort((a, b) => int.parse(a.item4).compareTo(int.parse(b.item4)));
     }
 
     if (_sortBy == "Descending")
@@ -339,8 +339,8 @@ class DiceRolls extends ChangeNotifier {
   int get getCustom => _custom;
   String get currentDice => _currentDice;
   List<DiceButtonDisplay> get diceButtonsDisplay => _diceButtonsDisplay;
-  List<Tuple4<String, String, String, List<Expanded>>> get allInfo => _allInfo;
-  List<Tuple4<String, String, String, List<Expanded>>> get allInfoTime => _allInfoTime;
+  List<Tuple5<String, String, String, String, List<Expanded>>> get allInfo => _allInfo;
+  List<Tuple5<String, String, String, String, List<Expanded>>> get allInfoTime => _allInfoTime;
   Tuple3<String, String, List<Expanded>> get historyInfo => _historyInfo;
   String get sortSelection => _sortSelection;
   String get ascendingDescending => _sortBy;

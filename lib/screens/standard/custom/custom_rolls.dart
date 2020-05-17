@@ -25,6 +25,7 @@ class CustomRolls extends ChangeNotifier {
   String _currentType = "";
   String _currentRoll = "";
   String _currentResult = "";
+  int _currentResultInt = 0;
 
   List<int> _allRolls = List<int>();
   List<DiceDisplay> _diceDisplays = List<DiceDisplay>();
@@ -87,7 +88,7 @@ class CustomRolls extends ChangeNotifier {
     }
     print(_allRolls);
     _currentResult = (_allRolls.reduce((a, b) => a + b)).toString();
-    int temp = int.parse(_currentResult);
+    _currentResultInt = int.parse(_currentResult);
     if (isNegMod) {
       _currentResult += "$mod";
     }
@@ -95,7 +96,8 @@ class CustomRolls extends ChangeNotifier {
       _currentResult += "+$mod";
     }
     if (mod != "0") {
-      _currentResult += "=${temp + int.parse(mod)}";
+      _currentResult += "=${_currentResultInt + int.parse(mod)}";
+      _currentResultInt += int.parse(mod);
     }
     /* /rolls */
     setRows();
@@ -189,6 +191,7 @@ class CustomRolls extends ChangeNotifier {
   String get currentType => _currentType;
   String get currentRoll => _currentRoll;
   String get currentResult => _currentResult;
+  int get currentResultInt => _currentResultInt;
   List<DiceDisplay> get diceDisplays => _diceDisplays;
   List<Expanded> get rows => _rows;
 

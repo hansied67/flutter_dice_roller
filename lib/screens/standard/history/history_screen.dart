@@ -182,7 +182,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           maxLines: 2,
                         ),
                         trailing: AutoSizeText(
-                          info.item3,
+                          info.item4,
                           maxLines: 1,
                         ),
                         onTap: () {
