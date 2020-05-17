@@ -30,14 +30,28 @@ class _DiceRollerState extends State<DiceRoller> {
       children: <Widget>[
         Expanded(
           flex: 7,
-          child: Column(
-              children: diceRolls.getRows
-          ),
+          child: Container(
+            color: Color(0xFF202020),
+            child: Padding(
+                padding: new EdgeInsets.all(8.0),
+                child: Column(
+                children: diceRolls.getRows.length != 0 ? diceRolls.getRows :
+                    [Container()]
+                )
+            )
+          )
         ),
         Expanded(
           flex: 2,
-          child: Material(
-              // color: Color(0xFF202020),
+          child: Container(
+              //color: Color(0xFF202020),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF202020), Color(0xFF2c2c2c)]
+                  )
+              ),
               child: Row(
               children: <Widget>[
                 Expanded(
@@ -75,7 +89,7 @@ class _DiceRollerState extends State<DiceRoller> {
         Expanded(
           flex: 3,
           child: Material(
-              color: Color(0xFF202020),
+              // color: Color(0xFF202020),
               child: Row(
               children: diceRolls.getDiceButtons.length != 0 ?
                   diceRolls.getDiceButtons.sublist(0, 4) : [Container()]
@@ -85,7 +99,7 @@ class _DiceRollerState extends State<DiceRoller> {
         Expanded(
             flex: 3,
             child: Material(
-                color: Color(0xFF202020),
+                // color: Color(0xFF202020),
                 child: Row(
                     children: diceRolls.getDiceButtons.length != 0 ?
                     diceRolls.getDiceButtons.sublist(4, 8) : [Container()]
@@ -95,7 +109,7 @@ class _DiceRollerState extends State<DiceRoller> {
         Expanded(
           flex: 2,
           child: Material(
-              color: Color(0xFF202020),
+              // color: Color(0xFF202020),
               child: Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/dice',
       routes: {
         '/home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
-        '/dice': (context) => StandardScreen(page: 0, pageController: PageController(initialPage: 0, keepPage: true)),
-        '/dice_1': (context) => StandardScreen(page: 1, pageController: PageController(initialPage: 1, keepPage: true)),
+        '/dice': (context) => StandardScreen(page: 0),
+        '/dice_1': (context) => StandardScreen(page: 1),
         '/dice_custom': (context) => DiceRollerCustom(),
         '/settings': (context) => SettingsScreen(),
         '/history': (context) => HistoryScreen()

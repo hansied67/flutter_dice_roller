@@ -26,13 +26,15 @@ class _CustomRollerState extends State<CustomRoller> {
   @override
   void initState() {
     super.initState();
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final customRolls = Provider.of<CustomRolls>(context, listen: false);
-      finalItems = customRolls.items;
-      items = new Map<String, dynamic>.from(customRolls.items);
-      initialItems = new Map<String, dynamic>.from(customRolls.items);
-    });
+  @override
+  void didChangeDependencies() {
+    final customRolls = Provider.of<CustomRolls>(context, listen: false);
+    finalItems = customRolls.items;
+    items = new Map<String, dynamic>.from(customRolls.items);
+    initialItems = new Map<String, dynamic>.from(customRolls.items);
+    super.didChangeDependencies();
   }
 
   void filterSearchResults(String query, var customRolls) {
@@ -78,7 +80,7 @@ class _CustomRollerState extends State<CustomRoller> {
         children: <Widget>[
           Expanded(
             flex: 2,
-            child: Padding(
+            child: Material(color: Color(0xFF202020), child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: <Widget>[
@@ -90,9 +92,17 @@ class _CustomRollerState extends State<CustomRoller> {
                   ),
                 ],
               )
-            )
+            ))
           ),
-          Row(
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF202020), Color(0xFF2c2c2c)]
+                )
+            ),
+            child: Row(
             children: <Widget>[
               Container(
                   alignment: Alignment.centerLeft,
@@ -130,14 +140,16 @@ class _CustomRollerState extends State<CustomRoller> {
                   )
               ),
             ],
+          )
           ),
-          Material(color: Color(0xFF202020), child: Padding(
+          Material(child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               onChanged: (value) {
                 filterSearchResults(value, customRolls);
               },
               controller: _controller,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 labelText: "Search",
                 hintText: "Spell",
@@ -150,7 +162,7 @@ class _CustomRollerState extends State<CustomRoller> {
           )),
           Expanded(
             flex: 3,
-            child: Material(color: Color(0xFF202020), child: ListView.separated(
+            child: Material(child: ListView.separated(
               shrinkWrap: true,
               itemCount: items.length+1,
               separatorBuilder: (BuildContext context, int index) => new Divider(),

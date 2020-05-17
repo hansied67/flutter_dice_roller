@@ -44,45 +44,55 @@ class _HistoryScreenState extends State<HistoryScreen> {
           children: <Widget>[
             Expanded(
               flex: 3,
-              child: Column(
-                children: diceRolls.historyInfo.item3,
+              child: Material(color: Color(0xFF202020), child: Column(
+                children: diceRolls.historyInfo.item3.length != 0 ? diceRolls.historyInfo.item3 :
+                    [Container()]
               )
-            ),
+            )),
             Expanded(
               flex: 1,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: AutoSizeText(
-                          diceRolls.historyInfo.item1,
-                          style: TextStyle(fontSize: 20.0, color: Colors.cyan),
-                          textAlign: TextAlign.left,
-                          maxLines: 3,
-                        )
+              child: Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xFF202020), Color(0xFF2c2c2c)]
                       )
-                    ),
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        child: AutoSizeText(
-                          diceRolls.historyInfo.item2,
-                          style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent),
-                          textAlign: TextAlign.right,
-                          maxLines: 1,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: AutoSizeText(
+                              diceRolls.historyInfo.item1,
+                              style: TextStyle(fontSize: 20.0, color: Colors.cyan),
+                              textAlign: TextAlign.left,
+                              maxLines: 3,
+                            )
+                          )
+                        ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            child: AutoSizeText(
+                              diceRolls.historyInfo.item2,
+                              style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent),
+                              textAlign: TextAlign.right,
+                              maxLines: 1,
+                            )
+                          )
                         )
-                      )
+                      ],
                     )
-                  ],
-                )
+                  )
               )
             ),
             Expanded(
               flex: 1,
-              child: Material(color: Color(0xFF202020), child: Padding(
+              child: Material(child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Row(
                   children: <Widget> [
@@ -155,7 +165,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
             Expanded(
               flex: 7,
-              child: Material(color: Color(0xFF202020), child: ListView.separated(
+              child: Material(child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: diceRolls.allInfo.length+1,
                 separatorBuilder: (BuildContext context, int index) => new Divider(),

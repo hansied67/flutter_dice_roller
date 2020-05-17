@@ -145,7 +145,7 @@ class CustomRolls extends ChangeNotifier {
 
   void getItems() async {
     var prefs = await SharedPreferences.getInstance();
-    _items = (json.decode(prefs.getString('CustomSet')));
+    _items = (json.decode(prefs.getString('CustomSet') ?? "{}"));
     notifyListeners();
   }
 

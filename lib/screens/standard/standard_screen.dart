@@ -9,19 +9,21 @@ import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 
 
 class StandardScreen extends StatefulWidget {
-  StandardScreen({Key key, this.page, this.pageController}) : super(key: key);
+  StandardScreen({Key key, this.page}) : super(key: key);
 
   final int page;
-  final PageController pageController;
 
   @override
   _StandardScreenState createState() => _StandardScreenState();
 }
 
-class _StandardScreenState extends State<StandardScreen> {
-  int _page;
-  PageController _controller;
-  int _sides = 0;
+class _StandardScreenState extends State<StandardScreen> with TickerProviderStateMixin {
+  final Map<Tab, dynamic> myTabs = {
+    new Tab(text: "Dice Roller"): DiceRoller(),
+    new Tab(text: "Custom Roller"): CustomRoller()
+  };
+  TabController _tabController;
+  int _sides = 0, _currentIndex;
   bool _validate = false;
 
   Future<String> _getInputDialog(BuildContext context, var diceRolls) async {
@@ -79,6 +81,7 @@ class _StandardScreenState extends State<StandardScreen> {
                     children: <Widget>[
                       new TextField(
                         autofocus: true,
+                        textCapitalization: TextCapitalization.sentences,
                         decoration: new InputDecoration(
                             labelText: 'Name', hintText: 'Potion of Healing',
                             errorText: _validate ? "Value Can't Be Empty" : null,
@@ -88,6 +91,7 @@ class _StandardScreenState extends State<StandardScreen> {
                         },
                       ),
                       new TextField(
+                        textCapitalization: TextCapitalization.sentences,
                         decoration: new InputDecoration(
                             labelText: 'Type', hintText: 'Spell'),
                         onChanged: (value) async {
@@ -129,29 +133,25 @@ class _StandardScreenState extends State<StandardScreen> {
     }
   }
 
-  void pageChanged(int index) {
-    setState(() {
-      _page = index;
-    });
-  }
-
-  void _onTapped(int index) {
-    setState(() {
-      _page = index;
-      _controller.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _page = widget.page;
-    _controller = widget.pageController;
+    _tabController = TabController(initialIndex: widget.page, vsync: this, length: myTabs.length);
+    _tabController.addListener(_handleTabSelection);
+    _currentIndex = widget.page;
   }
   @override
   void dispose() {
-    _controller.dispose();
+    _tabController.dispose();
     super.dispose();
+  }
+
+  _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      setState(() {
+        _currentIndex = _tabController.index;
+      });
+    }
   }
 
   @override
@@ -198,6 +198,10 @@ class _StandardScreenState extends State<StandardScreen> {
       ),
       appBar: AppBar(
         title: Text("Dice Roller"),
+        bottom: new TabBar(
+          controller: _tabController,
+          tabs: myTabs.keys.toList(),
+        ),
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: (String value) {_onHamburger(value, context, diceRolls);},
@@ -212,7 +216,7 @@ class _StandardScreenState extends State<StandardScreen> {
           )
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      /*bottomNavigationBar: BottomNavigationBar(
         currentIndex: _page,
         backgroundColor: Color(0xFF202020),
         items: const <BottomNavigationBarItem>[
@@ -226,19 +230,16 @@ class _StandardScreenState extends State<StandardScreen> {
           )
         ],
         onTap: (index) => _onTapped(index)
-      ),
-      body: PageView(
+      ),*/
+      body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
-          controller: _controller,
-          onPageChanged: (index) {
-              pageChanged(index);
-          },
+          controller: _tabController,
           children: <Widget>[
               DiceRoller(),
               CustomRoller(),
           ]
       ),
-      floatingActionButton: _page == 1 ? FloatingActionButton(
+      floatingActionButton: _currentIndex == 1 ? FloatingActionButton(
         onPressed: () {
           // TODO: go to custom input screen
           diceRolls.clear();
