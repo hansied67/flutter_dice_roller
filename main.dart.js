@@ -50308,7 +50308,7 @@ return g}}
 F.AQ.prototype={
 E:function(a){var t=Y.co(a,!0,u.cM),s=X.adi(),r=t.a?C.J:C.D
 s=X.a6h(new P.v(3854527487),C.X,r,C.Ai,s)
-return new S.ru(P.aQ(["/home",new F.PJ(),"/dice",new F.PK(),"/dice_1",new F.PL(),"/dice_custom",new F.PM(),"/settings",new F.PN(),"/history",new F.PO()],u.N,u.hw),"/dice","Flutter Demo",s,null)}}
+return new S.ru(P.aQ(["/home",new F.PJ(),"/dice",new F.PK(),"/dice_1",new F.PL(),"/dice_custom",new F.PM(),"/settings",new F.PN(),"/history",new F.PO()],u.N,u.hw),"/dice","D&D Rolls Tool",s,null)}}
 F.PJ.prototype={
 $1:function(a){return new F.kJ("Flutter Demo Home Page",null)},
 $S:238}
