@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final globalVariables = Provider.of<GlobalVariables>(context);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'D&D Rolls Tool',
       theme: ThemeData(
         // This is the theme of your application.
         //
