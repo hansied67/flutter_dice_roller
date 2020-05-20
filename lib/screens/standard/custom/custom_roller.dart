@@ -5,8 +5,10 @@ import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart
 import 'dart:convert';
 
 import 'package:provider/provider.dart';
+import 'package:reorderables/reorderables.dart';
 import 'package:tuple/tuple.dart';
 
+import 'custom_card.dart';
 import 'custom_rolls.dart';
 
 class CustomRoller extends StatefulWidget {
@@ -20,8 +22,25 @@ class _CustomRollerState extends State<CustomRoller> {
   TextEditingController _controller = TextEditingController();
 
   var items = Map<String, dynamic>();
-  var initialItems = Map<String, dynamic>();
-  var finalItems = Map<String, dynamic>();
+  var colors = Map<String, dynamic>();
+  var cards = List<Widget>();
+
+  void getCards() {
+    cards.clear();
+    print(colors);
+    for (int i=0; i<items.length; i++) {
+      setState(() {
+        cards.add(CustomCard(
+            keyString: items.keys.elementAt(i),
+            value: items[items.keys.elementAt(i)],
+            color: Color(colors[items.keys.elementAt(i)])
+        ));
+      });
+    }
+    setState(() {
+      cards.add(ListTile());
+    });
+  }
 
   @override
   void initState() {
@@ -31,55 +50,30 @@ class _CustomRollerState extends State<CustomRoller> {
   @override
   void didChangeDependencies() {
     final customRolls = Provider.of<CustomRolls>(context, listen: false);
-    finalItems = customRolls.items;
-    items = new Map<String, dynamic>.from(customRolls.items);
-    initialItems = new Map<String, dynamic>.from(customRolls.items);
+    items = customRolls.items;
+    colors = customRolls.colors;
+    getCards();
     super.didChangeDependencies();
   }
 
-  void filterSearchResults(String query, var customRolls) {
-    var dummySearchList = Map<String, String>();
-
-    for (String key in initialItems.keys) {
-      dummySearchList[key] = initialItems[key].keys.elementAt(0);
-    }
-
-    if (query.isNotEmpty) {
-      var dummyListData = Map<String, dynamic>();
-      for (String key in dummySearchList.keys) {
-        if (key.toLowerCase().contains(query.toLowerCase()) ||
-            dummySearchList[key].toLowerCase().contains(query.toLowerCase())) {
-          dummyListData[key] = initialItems[key];
-        }
-        else {
-        }
-      }
-      setState(() {
-        items.clear();
-        for (var item in dummyListData.keys) {
-          items[item] = dummyListData[item];
-        }
-      });
-      return;
-    }
-    else {
-      setState(() {
-        items.clear();
-        for (var key in initialItems.keys)
-          items[key] = initialItems[key];
-      });
-    }
-  }
   @override
   Widget build(BuildContext context) {
     final customRolls = Provider.of<CustomRolls>(context);
     final diceRolls = Provider.of<DiceRolls>(context);
-    // initialItems = new Map<String, dynamic>.from(customRolls.items);
+
+    void _onReorder(int oldIndex, int newIndex) {
+      setState(() {
+        CustomCard row = cards.removeAt(oldIndex);
+        cards.insert(newIndex, row);
+        customRolls.swapItems(oldIndex, newIndex);
+      });
+    }
+
     return Container(
       child: Column(
         children: <Widget>[
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Material(color: Color(0xFF202020), child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -94,7 +88,7 @@ class _CustomRollerState extends State<CustomRoller> {
               )
             ))
           ),
-          Container(
+          Expanded(flex: 1, child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -141,83 +135,42 @@ class _CustomRollerState extends State<CustomRoller> {
               ),
             ],
           )
-          ),
-          Material(child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: (value) {
-                filterSearchResults(value, customRolls);
-              },
-              controller: _controller,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: "Search",
-                hintText: "Spell",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25.0))
-                )
-              )
-            )
           )),
           Expanded(
-            flex: 3,
-            child: Material(child: ListView.separated(
+            flex: 5,
+            child: ReorderableWrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              padding: const EdgeInsets.all(8),
+              children: cards,
+              onReorder: _onReorder,
+            )
+          )
+          /*Expanded(
+            flex: 5,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 100.0,
+              ),
               shrinkWrap: true,
-              itemCount: items.length+1,
-              separatorBuilder: (BuildContext context, int index) => new Divider(),
+              itemCount: items.length+4,
+              padding: const EdgeInsets.all(8.0),
               itemBuilder: (context, index) {
                 if (index < items.length) {
                   String key = items.keys.elementAt(index);
                   var value = items[key];
-                  return Dismissible(
-                    key: Key(key),
-                    child: ListTile(
-                        title: Text(key),
-                        subtitle: Text(value.values.elementAt(0)),
-                        trailing: Text(value.keys.elementAt(0)),
-                        onTap: () {
-                          customRolls.setCurrentName(key);
-                          customRolls.setCurrentRoll(value.values.elementAt(0));
-                          customRolls.setCurrentType(value.keys.elementAt(0));
-                          customRolls.doRoll();
-                          setState(() {
-                            diceRolls.allInfoTime.add(Tuple5(
-                                customRolls.currentName,
-                                customRolls.currentRoll,
-                                customRolls.currentResult,
-                                customRolls.currentResultInt.toString(),
-                                new List<Expanded>.from(customRolls.rows)));
-                            diceRolls.allInfo.add(Tuple5(
-                                customRolls.currentName,
-                                customRolls.currentRoll,
-                                customRolls.currentResult,
-                                customRolls.currentResultInt.toString(),
-                                new List<Expanded>.from(customRolls.rows)));
-                          });
-                        }
-                    ),
-                    onDismissed: (direction) {
-                      setState(() {
-                        finalItems.remove(key);
-                        initialItems.remove(key);
-                        items.remove(key);
-                        customRolls.removeItem();
-                      });
-                      // Show a snackbar. This snackbar could also contain "Undo" actions.
-                      /*Scaffold
-                          .of(context)
-                          .showSnackBar(SnackBar(content: Text(
-                          "$key dismissed"), duration: Duration(seconds: 1)));*/
-                    },
+                  Color color = Color(colors[key]);
+
+                  return CustomCard(
+                    keyString: key,
+                    value: value,
+                    color: color,
                   );
                 }
-                else {
-                  return ListTile();
-                }
+                else return ListTile();
               }
-            ))
-          )
+            )
+          )*/
         ],
       )
     );

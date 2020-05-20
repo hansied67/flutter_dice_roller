@@ -24,7 +24,6 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
   };
   TabController _tabController;
   int _sides = 0, _currentIndex;
-  bool _validate = false;
 
   Future<String> _getInputDialog(BuildContext context, var diceRolls) async {
     // final diceRolls = Provider.of<DiceRolls>(context);
@@ -61,56 +60,6 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
                   child: Text('Ok'),
                   onPressed: () async {
                     Navigator.of(context).pop();
-                  }
-              )
-            ],
-          );
-        }
-    );
-  }
-
-  Future<String> _getInputDialogCustom(BuildContext context, var customRolls) async {
-    return showDialog<String>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Add a Custom Roll'),
-            content: SingleChildScrollView(
-                child: ListBody(
-                    children: <Widget>[
-                      new TextField(
-                        autofocus: true,
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: new InputDecoration(
-                            labelText: 'Name', hintText: 'Potion of Healing',
-                            errorText: _validate ? "Value Can't Be Empty" : null,
-                        ),
-                        onChanged: (value) async {
-                          customRolls.setCurrentName(value);
-                        },
-                      ),
-                      new TextField(
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: new InputDecoration(
-                            labelText: 'Type', hintText: 'Spell'),
-                        onChanged: (value) async {
-                          customRolls.setCurrentType(value);
-                        },
-                      ),
-                    ]
-                ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                  child: Text('Input Dice'),
-                  onPressed: () async {
-                    if (customRolls.currentName.isEmpty)
-                      setState(() {
-                        _validate = true;
-                      });
-                    else
-                      Navigator.of(context).pushReplacementNamed('/dice_custom');
                   }
               )
             ],
@@ -239,14 +188,20 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
               CustomRoller(),
           ]
       ),
-      floatingActionButton: _currentIndex == 1 ? FloatingActionButton(
-        onPressed: () {
-          // TODO: go to custom input screen
-          diceRolls.clear();
-          _getInputDialogCustom(context, customRolls);
-        },
-        child: Icon(Icons.add),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
+      floatingActionButton: _currentIndex == 1 ? Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+                heroTag: "btn1",
+                onPressed: () {
+                  customRolls.setSwapButton();
+                },
+                child: customRolls.swap ?
+                    Icon(Icons.rotate_right) :
+                    Icon(Icons.edit),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
+            ),
+          ]
       ) : Container()
     );
   }

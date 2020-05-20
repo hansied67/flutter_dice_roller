@@ -30,49 +30,58 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
     final diceRolls = Provider.of<DiceRolls>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("${customRolls.currentType}: ${customRolls.currentName}"),
+        title: Text(customRolls.currentName),
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             flex: 7,
-            child: Row(
+            child: Material(color: Color(0xFF202020), child: Row(
                 children: diceRolls.diceButtonsDisplay,
-            ),
+            )),
           ),
           Expanded(
             flex: 2,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    child: IconButton(
-                      icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
-                      onPressed: () {
-                        setState(() {
-                          diceRolls.changeMute();
-                          customRolls.changeMute();
-                        });
-                      },
+            child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xFF202020), Color(0xFF2c2c2c)]
                     )
-                  )
                 ),
-                Expanded(
-                    flex: 6,
+                child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
                     child: Container(
-                        alignment: Alignment.centerRight,
-                        padding: new EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                            "Roll: " + diceRolls.currentDice,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                fontSize: 15.0
-                            )
-                        )
+                      child: IconButton(
+                        icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
+                        onPressed: () {
+                          setState(() {
+                            diceRolls.changeMute();
+                            customRolls.changeMute();
+                          });
+                        },
+                      )
                     )
-                )
-              ]
+                  ),
+                  Expanded(
+                      flex: 6,
+                      child: Container(
+                          alignment: Alignment.centerRight,
+                          padding: new EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                              "Roll: " + diceRolls.currentDice,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                  fontSize: 15.0
+                              )
+                          )
+                      )
+                  )
+                ]
+              )
             )
           ),
           Expanded(

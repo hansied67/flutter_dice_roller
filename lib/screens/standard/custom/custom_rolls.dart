@@ -21,6 +21,7 @@ class CustomRolls extends ChangeNotifier {
   List<Expanded> _rows = List<Expanded>();
 
   var _items = Map<String, dynamic>();
+  var _colors = Map<String, dynamic>();
   String _currentName = "";
   String _currentType = "";
   String _currentRoll = "";
@@ -34,6 +35,8 @@ class CustomRolls extends ChangeNotifier {
   bool _mute = false;
 
   List<AudioPlayer> audioPlayers = new List<AudioPlayer>();
+
+  bool _swap = true;
 
   CustomRolls() {
     getItems();
@@ -148,20 +151,78 @@ class CustomRolls extends ChangeNotifier {
   void getItems() async {
     var prefs = await SharedPreferences.getInstance();
     _items = (json.decode(prefs.getString('CustomSet') ?? "{}"));
+    _colors = (json.decode(prefs.getString('Colors')) ?? "{}");
+    print(_items);
+    _items["null"] = "{}";
+    _colors["null"] = ThemeData.dark().cardColor.withAlpha(200).value;
+    for (var key in _items.keys) {
+      if (!_colors.containsKey(key)) {
+        _colors[key] = ThemeData.dark().cardColor.value;
+      }
+    }
+    await prefs.setString('Colors', json.encode(_colors));
     notifyListeners();
   }
 
   void addItem(String name, Map<String, dynamic> info) async {
     var prefs = await SharedPreferences.getInstance();
 
+    _items.remove("null");
     _items[name] = info;
+    _items["null"] = "{}";
+    _colors[name] = ThemeData.dark().cardColor.value;
+    await prefs.setString('CustomSet', json.encode(_items));
+    await prefs.setString('Colors', json.encode(_colors));
+    notifyListeners();
+  }
+
+  void swapItems(int oldIndex, int newIndex) async {
+    var prefs = await SharedPreferences.getInstance();
+
+    var itemsList = _items.keys.toList();
+    itemsList.remove("null"); // make last
+    var tempItems = Map<String, dynamic>();
+
+    var item;
+
+    /* ensure null CustomCard is last */
+    if (oldIndex < itemsList.length)
+      item = itemsList.removeAt(oldIndex);
+    else
+      item = itemsList.removeAt(oldIndex-1);
+    if (newIndex < itemsList.length)
+      itemsList.insert(newIndex, item);
+    else
+      itemsList.insert(newIndex-1, item);
+
+    for (var itemName in itemsList) {
+      tempItems[itemName] = _items[itemName];
+    }
+
+    _items = tempItems;
+    _items["null"] = "{}";
     await prefs.setString('CustomSet', json.encode(_items));
     notifyListeners();
   }
 
-  void removeItem() async {
+  void setSwapButton() {
+    _swap = !_swap;
+    notifyListeners();
+  }
+
+  void confirmColor(Color color, String keyString) async {
     var prefs = await SharedPreferences.getInstance();
+    _colors[keyString] = color.value;
+    await prefs.setString('Colors', json.encode(_colors));
+    notifyListeners();
+  }
+
+  void removeItem(String name) async {
+    var prefs = await SharedPreferences.getInstance();
+    _items.remove(name);
+    _colors.remove(name);
     await prefs.setString('CustomSet', json.encode(_items));
+    await prefs.setString('Colors', json.encode(_colors));
     notifyListeners();
   }
 
@@ -186,6 +247,7 @@ class CustomRolls extends ChangeNotifier {
   void setCurrentRoll(String roll) { _currentRoll = roll; notifyListeners(); }
 
   Map<String, dynamic> get items => _items;
+  Map<String, dynamic> get colors => _colors;
 
   String get currentName => _currentName;
   String get currentType => _currentType;
@@ -194,6 +256,7 @@ class CustomRolls extends ChangeNotifier {
   int get currentResultInt => _currentResultInt;
   List<DiceDisplay> get diceDisplays => _diceDisplays;
   List<Expanded> get rows => _rows;
+  bool get swap => _swap;
 
   int get getCustom => _custom;
 }
