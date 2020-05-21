@@ -54,9 +54,9 @@ class _CustomCardState extends State<CustomCard> {
                                 return null;
                               },
                               onFieldSubmitted: (text) {
-                                print(text);
-                                Navigator.of(context).pushReplacementNamed(
-                                    '/dice_custom');
+                                if (text.length != 0)
+                                  Navigator.of(context).pushReplacementNamed(
+                                      '/dice_custom');
                               }
                           ),
                       )
@@ -70,7 +70,7 @@ class _CustomCardState extends State<CustomCard> {
                     if (_formKey.currentState.validate())
                       Navigator.of(context).pushReplacementNamed(
                           '/dice_custom');
-                  }
+                  },
               )
             ],
           );
@@ -179,6 +179,7 @@ class _CustomCardState extends State<CustomCard> {
         color: widget.color,
         child: InkWell(
             onTap: () => _getInputDialogCustom(context, customRolls),
+            onLongPress: () => _getInputDialogCustom(context, customRolls),
             child: Container(
                 height: 70,
                 width: 70,

@@ -132,6 +132,12 @@ class DiceButton extends StatefulWidget {
                     onChanged: (value) {
                       try {
                         _sides = int.parse(value);
+                        if (_sides < 1) {
+                          _sides = 1;
+                        }
+                        else if (_sides > 999999999) {
+                          _sides = 999999999;
+                        }
                       } on Exception {
                         _sides = diceRolls.getCustom;
                       }

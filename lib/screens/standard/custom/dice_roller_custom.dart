@@ -117,13 +117,21 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                     child: RaisedButton(
                         child: AutoText("Confirm", 20.0),
                         onPressed: () async {
-                          setState(() {
-                            customRolls.setCurrentRoll(diceRolls.currentDice);
-                            customRolls.addItem(customRolls.currentName, {customRolls.currentType: customRolls.currentRoll});
-                            diceRolls.clearAll();
-                            customRolls.clear();
-                          });
-                          Navigator.of(context).pushReplacementNamed('/dice_1');
+                          if (diceRolls.diceButtonsDisplay.length != 0) {
+                            setState(() {
+                              customRolls.setCurrentRoll(diceRolls.currentDice);
+                              customRolls.addItem(customRolls.currentName, {
+                                customRolls.currentType: customRolls.currentRoll
+                              });
+                              diceRolls.clearAll();
+                              customRolls.clear();
+                            });
+                            Navigator.of(context).pushReplacementNamed(
+                                '/dice_1');
+                          }
+                          else {
+                            print('a');
+                          }
                         }
                     )
                 )),
