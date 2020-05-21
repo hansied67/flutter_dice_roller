@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/global_widgets/auto_text.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import 'dice_rolls.dart';
 
@@ -10,11 +12,12 @@ class DiceDisplay extends StatefulWidget {
   final List<int> standardDice = [4, 6, 8, 10, 12, 20, 100];
   final int sides;
   int index;
+  bool custom;
   final rng = new Random();
   int _roll;
   Center _rollDisplay;
 
-  DiceDisplay({this.sides, this.index}) {
+  DiceDisplay({this.sides, this.index, this.custom = false}) {
     _roll = rng.nextInt(sides) + 1;
     double gradientPercent = _roll / sides;
     if (_roll != 1 && _roll != sides)
@@ -52,11 +55,35 @@ class _DiceDisplayState extends State<DiceDisplay>
   @override
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
+    final customRolls = Provider.of<CustomRolls>(context);
     return Expanded(
 
       child: GestureDetector(
         onTap: () async {
-          diceRolls.decDie(widget.sides, widget.index);
+          if (!widget.custom)
+            diceRolls.decDie(widget.sides, widget.index, widget.custom, customRolls);
+          else {
+            customRolls.doRoll();
+            setState(() {
+              diceRolls.allInfoTime.add(Tuple5(
+                  customRolls.currentName,
+                  customRolls.currentRoll,
+                  customRolls.currentResult,
+                  customRolls.currentResultInt.toString(),
+                  new List<Expanded>.from(customRolls.rows)));
+              diceRolls.allInfo.add(Tuple5(
+                  customRolls.currentName,
+                  customRolls.currentRoll,
+                  customRolls.currentResult,
+                  customRolls.currentResultInt.toString(),
+                  new List<Expanded>.from(customRolls.rows)));
+            });
+          }
+        },
+        onLongPress: () {
+          if (widget.custom) {
+            customRolls.clear();
+          }
         },
         child: Stack(
           children: <Widget> [

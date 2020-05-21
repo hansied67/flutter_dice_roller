@@ -37,6 +37,7 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
               children: <Widget>[
                 new Expanded(
                     child: new TextField(
+                      maxLength: 9,
                       onSubmitted: Navigator.of(context).pop,
                       autofocus: true,
                       keyboardType: TextInputType.number,

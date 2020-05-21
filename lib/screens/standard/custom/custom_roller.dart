@@ -143,6 +143,7 @@ class _CustomRollerState extends State<CustomRoller> {
             child: ReorderableWrap(
               spacing: 8.0,
               runSpacing: 4.0,
+              alignment: WrapAlignment.center,
               padding: const EdgeInsets.all(8),
               children: cards,
               onReorder: _onReorder,

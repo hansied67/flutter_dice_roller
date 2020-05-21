@@ -124,6 +124,7 @@ class DiceButton extends StatefulWidget {
             children: <Widget>[
               new Expanded(
                 child: new TextField(
+                  maxLength: 9,
                   onSubmitted: Navigator.of(context).pop,
                   autofocus: true,
                   keyboardType: TextInputType.number,

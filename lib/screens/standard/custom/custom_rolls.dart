@@ -84,6 +84,7 @@ class CustomRolls extends ChangeNotifier {
         _diceDisplays.add(DiceDisplay(
           sides: int.parse(sides[i]),
           index: counter,
+          custom: true,
         ));
         _allRolls.add(_diceDisplays[counter].getRoll);
         counter++;

@@ -124,7 +124,8 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                                 customRolls.currentType: customRolls.currentRoll
                               });
                               diceRolls.clearAll();
-                              customRolls.clear();
+                              // customRolls.clear();
+                              customRolls.doRoll();
                             });
                             Navigator.of(context).pushReplacementNamed(
                                 '/dice_1');

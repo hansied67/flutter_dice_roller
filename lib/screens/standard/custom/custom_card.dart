@@ -24,6 +24,7 @@ class _CustomCardState extends State<CustomCard> {
 
   bool _validate = false;
   final _formKey = GlobalKey<FormState>();
+  final _controller = TextEditingController();
 
   Future<String> _getInputDialogCustom(BuildContext context, var customRolls) async {
     return showDialog<String>(
@@ -38,16 +39,14 @@ class _CustomCardState extends State<CustomCard> {
                       Form(
                           key: _formKey,
                           child: TextFormField(
+                              maxLength: 100,
+                              controller: _controller,
                               autofocus: true,
                               textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration(
                                 labelText: 'Name', hintText: 'Potion of Healing',
                                 errorText: _validate ? "Value Can't Be Empty" : null,
                               ),
-                              onChanged: (value) async {
-                                if (value.length < 200)
-                                  customRolls.setCurrentName(value);
-                              },
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return "Value can't be empty";
@@ -55,9 +54,11 @@ class _CustomCardState extends State<CustomCard> {
                                 return null;
                               },
                               onFieldSubmitted: (text) {
-                                if (text.length != 0)
+                                if (_formKey.currentState.validate()) {
+                                  customRolls.setCurrentName(_controller.text);
                                   Navigator.of(context).pushReplacementNamed(
                                       '/dice_custom');
+                                }
                               }
                           ),
                       )
@@ -69,6 +70,7 @@ class _CustomCardState extends State<CustomCard> {
                   child: Text('Input Dice'),
                   onPressed: () async {
                     if (_formKey.currentState.validate())
+                      customRolls.setCurrentName(_controller.text);
                       Navigator.of(context).pushReplacementNamed(
                           '/dice_custom');
                   },
@@ -86,6 +88,7 @@ class _CustomCardState extends State<CustomCard> {
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 

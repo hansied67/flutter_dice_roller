@@ -23,6 +23,7 @@ class DiceRolls extends ChangeNotifier {
   String _currentDie = "";
   String _currentDice = "";
   int _totalRolls = 0;
+  String _totalRollsString = "";
   List<int> _allRolls = List<int>();
   Map<int, int> _diceCounts = {4: 0, 6: 0, 8: 0, 10: 0, 12: 0, 20: 0, 100: 0};
   var _allInfo = List<Tuple5<String, String, String, String, List<Expanded>>>();
@@ -90,14 +91,13 @@ class DiceRolls extends ChangeNotifier {
       } catch (e) {
         print('not long enough');
       }
-      if (_mod > 0) {
+      if (_mod > 0 && _currentDice.length != 0) {
         _currentDice += "+$_mod";
       }
-      else if (_mod < 0) {
+      else if (_mod < 0 && _currentDice.length != 0) {
         _currentDice += "-${_mod * -1}";
       }
-      else
-        _currentDice += _mod.toString();
+        // _currentDice += _mod.toString();
       notifyListeners();
     }
   }
@@ -117,7 +117,6 @@ class DiceRolls extends ChangeNotifier {
     else if (_mod < 0) {
       _currentDice += "-${_mod*-1}";
     }
-    print(_mod);
     notifyListeners();
   }
 
@@ -132,13 +131,15 @@ class DiceRolls extends ChangeNotifier {
     notifyListeners();
   }
 
-  void decDie(int sides, int index) {
+  void decDie(int sides, int index, bool custom, var customRolls) {
     _allRolls.removeAt(index);
     if (_diceCounts[sides] != null)
       _diceCounts[sides]--;
-    _totalRolls -= _diceDisplays.elementAt(index).getRoll;
+    _totalRolls -= _diceDisplays
+        .elementAt(index)
+        .getRoll;
     _diceDisplays.removeAt(index);
-    for (int i=0; i<_diceDisplays.length; i++) {
+    for (int i = 0; i < _diceDisplays.length; i++) {
       if (_diceDisplays[i].index > index)
         _diceDisplays[i].index--;
     }
@@ -196,6 +197,14 @@ class DiceRolls extends ChangeNotifier {
           ));
         }
       }
+
+      if (_mod > 0) {
+        _currentDice += "+$_mod";
+      }
+      else if (_mod < 0) {
+        _currentDice += "-${_mod * -1}";
+      }
+
       notifyListeners();
     }
   }
@@ -234,7 +243,7 @@ class DiceRolls extends ChangeNotifier {
     _diceDisplays.clear();
 
     _currentDice = "";
-    _totalRolls = _mod;
+    _totalRolls = 0;
 
     int count = 0;
     for (int key in _diceCounts.keys) {
@@ -255,13 +264,21 @@ class DiceRolls extends ChangeNotifier {
       _currentDice += "+$_mod";
     else if (_mod < 0)
       _currentDice += "-$_mod";
-    print(_currentDice);
-    print(_totalRolls);
+
+    if (_mod != 0)
+      _totalRollsString = _totalRolls.toString() + "+" + _mod.toString() +
+          "=" + (_totalRolls+_mod).toString();
+    else
+      _totalRollsString = _totalRolls.toString();
+    _totalRolls += _mod;
+
 
     setRows();
 
-    _allInfoTime.add(Tuple5("Roll", _currentDice, _totalRolls.toString(), _totalRolls.toString(), new List<Expanded>.from(_rows)));
-    _allInfo.add(Tuple5("Roll", _currentDice, _totalRolls.toString(), _totalRolls.toString(), new List<Expanded>.from(_rows)));
+
+
+    _allInfoTime.add(Tuple5("Roll", _currentDice, _totalRollsString, _totalRolls.toString(), new List<Expanded>.from(_rows)));
+    _allInfo.add(Tuple5("Roll", _currentDice, _totalRollsString, _totalRolls.toString(), new List<Expanded>.from(_rows)));
 
     notifyListeners();
   }

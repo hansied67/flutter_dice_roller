@@ -19,6 +19,7 @@ class ModBox extends StatefulWidget {
               children: <Widget>[
                 new Expanded(
                     child: new TextField(
+                      maxLength: 9,
                       onSubmitted: (value) async {
                         try {
                           diceRolls.changeModText(int.parse(value));
