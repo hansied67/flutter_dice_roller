@@ -47,7 +47,9 @@ class DiceRolls extends ChangeNotifier {
 
   void resetCustom() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    _diceCounts.remove(_custom);
     _custom = 2;
+    _diceCounts[_custom] = 0;
     await prefs.setInt('custom', _custom);
     notifyListeners();
   }
@@ -132,7 +134,8 @@ class DiceRolls extends ChangeNotifier {
 
   void decDie(int sides, int index) {
     _allRolls.removeAt(index);
-    _diceCounts[sides]--;
+    if (_diceCounts[sides] != null)
+      _diceCounts[sides]--;
     _totalRolls -= _diceDisplays.elementAt(index).getRoll;
     _diceDisplays.removeAt(index);
     for (int i=0; i<_diceDisplays.length; i++) {
