@@ -112,7 +112,7 @@ class DiceButton extends StatefulWidget {
   int get getSides => _sides;
   bool get getIsCustom => _isCustom;
 
-  Future<String> _getInputDialog(BuildContext context, var diceRolls) async {
+  Future<String> _getInputDialog(BuildContext context, var diceRolls, var customRolls) async {
     // final diceRolls = Provider.of<DiceRolls>(context);
     return showDialog<String>(
       context: context,
@@ -130,6 +130,7 @@ class DiceButton extends StatefulWidget {
                   decoration: new InputDecoration(
                     labelText: 'Custom Roll Sides', hintText: '2'),
                     onChanged: (value) {
+                      customRolls.diceDisplays.clear();
                       try {
                         _sides = int.parse(value);
                         if (_sides < 1) {
@@ -139,8 +140,10 @@ class DiceButton extends StatefulWidget {
                           _sides = 999999999;
                         }
                       } on Exception {
-                        _sides = diceRolls.getCustom;
+                        _sides = 1;
                       }
+                      if ([4, 6, 8, 10, 12, 20, 100].contains(_sides))
+                        _sides = 1;
                       diceRolls.changeCustom(_sides);
                     },
                   )
@@ -183,7 +186,7 @@ class _DiceButtonState extends State<DiceButton> {
           },
           onLongPress: () async {
             if (widget._isCustom)
-              widget._getInputDialog(context, diceRolls);
+              widget._getInputDialog(context, diceRolls, customRolls);
           },
           child: Stack(children: <Widget> [
             Center(

@@ -45,6 +45,13 @@ class DiceRolls extends ChangeNotifier {
     getMuteFile();
   }
 
+  void resetCustom() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _custom = 2;
+    await prefs.setInt('custom', _custom);
+    notifyListeners();
+  }
+
   void setDiceButtons() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _custom = (prefs.getInt('custom') ?? 2);
@@ -71,38 +78,44 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void changeMod(int change) {
-    _mod += change;
-    _totalRolls += change;
-    try {
-      if (_currentDice[_currentDice.length - 2] == '+' ||
-          _currentDice[_currentDice.length - 2] == '-')
-        _currentDice = _currentDice.substring(0, _currentDice.length - 2);
-    } catch (e) {
-      print('not long enough');
+    if (_mod > -999999999 && _mod < 999999999) {
+      _mod += change;
+      _totalRolls += change;
+      try {
+        if (_currentDice[_currentDice.length - 2] == '+' ||
+            _currentDice[_currentDice.length - 2] == '-')
+          _currentDice = _currentDice.substring(0, _currentDice.length - 2);
+      } catch (e) {
+        print('not long enough');
+      }
+      if (_mod > 0) {
+        _currentDice += "+$_mod";
+      }
+      else if (_mod < 0) {
+        _currentDice += "-${_mod * -1}";
+      }
+      else
+        _currentDice += _mod.toString();
+      notifyListeners();
     }
-    if (_mod > 0) {
-      _currentDice += "+$_mod";
-    }
-    else if (_mod < 0) {
-      _currentDice += "-${_mod*-1}";
-    }
-    else
-      _currentDice += _mod.toString();
-    notifyListeners();
   }
 
   void changeModText(int change) {
     _totalRolls -= _mod;
     _mod = change;
     _totalRolls += _mod;
-    if (_currentDice[_currentDice.length-2] == '+' || _currentDice[_currentDice.length-2] == '-')
-      _currentDice = _currentDice.substring(0, _currentDice.length-2);
+    if (_currentDice.length - 2 > 0) {
+      if (_currentDice[_currentDice.length - 2] == '+' ||
+          _currentDice[_currentDice.length - 2] == '-')
+        _currentDice = _currentDice.substring(0, _currentDice.length - 2);
+    }
     if (_mod > 0) {
       _currentDice += "+$_mod";
     }
     else if (_mod < 0) {
       _currentDice += "-${_mod*-1}";
     }
+    print(_mod);
     notifyListeners();
   }
 
@@ -317,11 +330,21 @@ class DiceRolls extends ChangeNotifier {
     int count = 0;
     if (!_mute) {
       for (int key in _diceCounts.keys) {
-        if (_diceCounts[key] == 1) {
-          audioPlayers.add(await _diceButtons[count].playSound());
+        if ([4, 6, 8, 10, 12, 20, 100].contains(key)) {
+          if (_diceCounts[key] == 1) {
+            audioPlayers.add(await _diceButtons[count].playSound());
+          }
+          else if (_diceCounts[key] > 1) {
+            audioPlayers.add(await _diceButtons[count].playMultiple());
+          }
         }
-        else if (_diceCounts[key] > 1) {
-          audioPlayers.add(await _diceButtons[count].playMultiple());
+        else {
+          if (_diceCounts[key] == 1) {
+            audioPlayers.add(await DiceButton(isCustom: true).playSound());
+          }
+          else if (_diceCounts[key] > 1) {
+            audioPlayers.add(await DiceButton(isCustom: true).playMultiple());
+          }
         }
         count++;
       }

@@ -5,10 +5,13 @@ import 'package:provider/provider.dart';
 import 'dice_rolls.dart';
 
 class ModBox extends StatefulWidget {
+
+  final _controller = TextEditingController();
+
   Future<String> _getInputDialog(BuildContext context, var diceRolls) async {
     return showDialog<String>(
         context: context,
-        barrierDismissible: false,
+        barrierDismissible: true,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Change the modifier'),
@@ -16,28 +19,34 @@ class ModBox extends StatefulWidget {
               children: <Widget>[
                 new Expanded(
                     child: new TextField(
-                      onSubmitted: Navigator.of(context).pop,
-                      autofocus: true,
-                      keyboardType: TextInputType.number,
-                      decoration: new InputDecoration(
-                          labelText: 'Modifier:', hintText: diceRolls.getMod.toString()),
-                      onChanged: (value) {
+                      onSubmitted: (value) async {
                         try {
                           diceRolls.changeModText(int.parse(value));
                         } on Exception {
                           diceRolls.changeModText(0);
                         }
+                        Navigator.of(context).pop();
                       },
+                      autofocus: true,
+                      controller: _controller,
+                      keyboardType: TextInputType.number,
+                      decoration: new InputDecoration(
+                          labelText: 'Modifier:', hintText: diceRolls.getMod.toString()),
                     )
                 )
               ],
             ),
             actions: <Widget>[
               FlatButton(
-                  child: Text('Ok'),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
+                child: Text('Ok'),
+                onPressed: () async {
+                  try {
+                    diceRolls.changeModText(int.parse(_controller.text));
+                  } on Exception {
+                    diceRolls.changeModText(0);
                   }
+                  Navigator.of(context).pop();
+                },
               )
             ],
           );
@@ -50,6 +59,12 @@ class ModBox extends StatefulWidget {
 }
 
 class _ModBoxState extends State<ModBox> {
+  @override
+  void dispose() {
+    widget._controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);

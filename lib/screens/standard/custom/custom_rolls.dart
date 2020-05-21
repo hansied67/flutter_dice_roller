@@ -243,6 +243,17 @@ class CustomRolls extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetCustom() async {
+    var prefs = await SharedPreferences.getInstance();
+    _items.clear();
+    _items["null"] = "{}";
+    _colors.clear();
+    _colors["null"] = ThemeData.dark().cardColor.withAlpha(200).value;
+    await prefs.setString('CustomSet', json.encode(_items));
+    await prefs.setString('Colors', json.encode(_colors));
+
+  }
+
   void setCurrentName(String name) { _currentName = name; notifyListeners(); }
   void setCurrentType(String type) { _currentType = type; notifyListeners(); }
   void setCurrentRoll(String roll) { _currentRoll = roll; notifyListeners(); }

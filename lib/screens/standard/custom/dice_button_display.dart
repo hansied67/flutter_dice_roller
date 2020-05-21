@@ -37,7 +37,7 @@ class _DiceButtonDisplayState extends State<DiceButtonDisplay> {
                 diceRolls.onTapDec(widget);
               }
               else {
-                diceRolls.onTapDec(DiceButtonDisplay(num: widget._num, sides: diceRolls.getCustom, isCustom: true));
+                diceRolls.onTapDec(DiceButtonDisplay(num: widget._num, sides: widget._sides, isCustom: true));
               }
             },
             onLongPress: () async {

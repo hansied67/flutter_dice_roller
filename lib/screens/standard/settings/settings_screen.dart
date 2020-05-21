@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
+import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
@@ -23,6 +26,8 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final diceRolls = Provider.of<DiceRolls>(context);
+    final customRolls = Provider.of<CustomRolls>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
@@ -36,8 +41,39 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
         controller: _controller,
         children: myTabs.map((Tab tab) {
           final String label = tab.text;
-          return Center(
+          return label == "Characters" ? Center(
             child: Text('$label', style: const TextStyle(fontSize: 36)),
+          ) : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(
+                  child: Text('Delete Custom Rolls'),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      child: AlertDialog(
+                        title: const Text ('Delete all Custom Rolls?'),
+                        actions: [
+                          FlatButton(
+                            child: const Text('No'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }
+                          ),
+                          FlatButton(
+                            child: const Text('Yes'),
+                            onPressed: () {
+                              diceRolls.resetCustom();
+                              customRolls.resetCustom();
+                              Navigator.of(context).pop();
+                            }
+                          )
+                        ]
+                      )
+                    );
+                  }
+              )
+            ]
           );
         }).toList()
       ),

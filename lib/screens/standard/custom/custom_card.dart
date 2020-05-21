@@ -45,7 +45,8 @@ class _CustomCardState extends State<CustomCard> {
                                 errorText: _validate ? "Value Can't Be Empty" : null,
                               ),
                               onChanged: (value) async {
-                                customRolls.setCurrentName(value);
+                                if (value.length < 200)
+                                  customRolls.setCurrentName(value);
                               },
                               validator: (value) {
                                 if (value.isEmpty) {

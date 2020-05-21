@@ -45,7 +45,7 @@ class _AutoTextState extends State<AutoText> {
               maxLines: 1,
               style: TextStyle(
                   fontSize: widget._fontSize,
-                  color: Colors.white,
+                  color: widget._color,
                   shadows: widget._outline ? [
                     Shadow(
                       offset: Offset(-1.5, -1.5),
