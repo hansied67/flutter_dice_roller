@@ -113,7 +113,7 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void changeModText(int change) {
-    _totalRolls -= _mod;
+    // _totalRolls -= _mod;
     var temp = _mod;
     if (temp < 0) temp = -temp;
     _mod = change;
