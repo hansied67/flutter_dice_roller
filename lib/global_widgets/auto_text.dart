@@ -43,6 +43,7 @@ class _AutoTextState extends State<AutoText> {
             child: AutoSizeText(
               widget._text,
               maxLines: 1,
+              minFontSize: 5,
               style: TextStyle(
                   fontSize: widget._fontSize,
                   color: widget._color,

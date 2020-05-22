@@ -78,7 +78,25 @@ class _DiceRollerState extends State<DiceRoller> {
                       "Total: " + diceRolls.totalRollsString,
                       textAlign: TextAlign.right,
                       style: TextStyle(
-                          fontSize: 25.0
+                          fontSize: 25.0,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(-1.5, -1.5),
+                              color: Colors.black,
+                            ),
+                            Shadow(
+                              offset: Offset(1.5, -1.5),
+                              color: Colors.black,
+                            ),
+                            Shadow(
+                              offset: Offset(1.5, 1.5),
+                              color: Colors.black,
+                            ),
+                            Shadow(
+                              offset: Offset(-1.5, 1.5),
+                              color: Colors.black,
+                            ),
+                          ]
                       ),
                       minFontSize: 5.0,
                     )

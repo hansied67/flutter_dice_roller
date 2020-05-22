@@ -162,7 +162,7 @@ class _CustomCardState extends State<CustomCard> {
                           widget.keyString,
                           maxLines: 2,
                           minFontSize: 3.0,
-                          textAlign: TextAlign.center
+                          textAlign: TextAlign.center,
                       )
                   ),
                   Container(
@@ -173,7 +173,7 @@ class _CustomCardState extends State<CustomCard> {
                           widget.value.values.elementAt(0),
                           maxLines: 2,
                           minFontSize: 5.0,
-                          textAlign: TextAlign.center
+                          textAlign: TextAlign.center,
                       )
                   )
                 ],

@@ -23,7 +23,7 @@ class DiceRolls extends ChangeNotifier {
   String _currentDie = "";
   String _currentDice = "";
   int _totalRolls = 0;
-  String _totalRollsString = "";
+  String _totalRollsString = "0";
   List<int> _allRolls = List<int>();
   Map<int, int> _diceCounts = {4: 0, 6: 0, 8: 0, 10: 0, 12: 0, 20: 0, 100: 0};
   var _allInfo = List<Tuple5<String, String, String, String, List<Expanded>>>();
@@ -167,6 +167,14 @@ class DiceRolls extends ChangeNotifier {
       if (_diceDisplays[i].index > index)
         _diceDisplays[i].index--;
     }
+    if (_mod == 0)
+      _totalRollsString = _totalRolls.toString();
+    else if (_mod > 0)
+      _totalRollsString = _totalRolls.toString() + "+" +
+          _mod.toString() + "=" + (_totalRolls+_mod).toString();
+    else
+      _totalRollsString = _totalRolls.toString() + "-" +
+          (_mod*-1).toString() + "=" + (_totalRolls+_mod).toString();
     setRows();
     notifyListeners();
   }
@@ -296,19 +304,23 @@ class DiceRolls extends ChangeNotifier {
     if (_mod > 0)
       _currentDice += "+$_mod";
     else if (_mod < 0)
-      _currentDice += "-$_mod";
+      _currentDice += "$_mod";
 
-    if (_mod != 0)
+    if (_mod == 0)
+      _totalRollsString = _totalRolls.toString();
+    else if (_mod > 0)
       _totalRollsString = _totalRolls.toString() + "+" + _mod.toString() +
           "=" + (_totalRolls+_mod).toString();
     else
-      _totalRollsString = _totalRolls.toString();
-    _totalRolls += _mod;
+      _totalRollsString = _totalRolls.toString() + "-" + (_mod*-1).toString() +
+          "=" + (_totalRolls+_mod).toString();
+
+    // _totalRolls += _mod;
 
     setRows();
 
-    _allInfoTime.add(Tuple5("Roll", _currentDice, _totalRollsString, _totalRolls.toString(), new List<Expanded>.from(_rows)));
-    _allInfo.add(Tuple5("Roll", _currentDice, _totalRollsString, _totalRolls.toString(), new List<Expanded>.from(_rows)));
+    _allInfoTime.add(Tuple5("Roll", _currentDice, _totalRollsString, (_totalRolls+_mod).toString(), new List<Expanded>.from(_rows)));
+    _allInfo.add(Tuple5("Roll", _currentDice, _totalRollsString, (_totalRolls +_mod).toString(), new List<Expanded>.from(_rows)));
 
     notifyListeners();
   }
@@ -316,7 +328,17 @@ class DiceRolls extends ChangeNotifier {
   void clear() {
     _currentDie = "";
     _currentDice = "";
-    _totalRolls = _mod;
+    _totalRolls = 0;
+
+    if (_mod == 0)
+      _totalRollsString = _totalRolls.toString();
+    else if (_mod > 0)
+      _totalRollsString = _totalRolls.toString() + "+" + _mod.toString() +
+          "=" + (_totalRolls+_mod).toString();
+    else
+      _totalRollsString = _totalRolls.toString() + "-" + (_mod*-1).toString() +
+          "=" + (_totalRolls+_mod).toString();
+
     _allRolls.clear();
     for (var key in _diceCounts.keys) { _diceCounts[key] = 0; }
     _diceDisplays.clear();
