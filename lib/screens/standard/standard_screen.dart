@@ -50,7 +50,6 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
                           _sides = diceRolls.getCustom;
                         }
                         await diceRolls.changeCustom(_sides);
-                        print(diceRolls.getCustom);
                       },
                     )
                 )

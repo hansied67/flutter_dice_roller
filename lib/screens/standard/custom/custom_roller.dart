@@ -27,10 +27,7 @@ class _CustomRollerState extends State<CustomRoller> {
 
   void getCards() {
     cards.clear();
-    print("*****");
-    print(colors);
     for (int i=0; i<items.length; i++) {
-      print(items.keys.elementAt(i));
       setState(() {
         cards.add(CustomCard(
             keyString: items.keys.elementAt(i),

@@ -81,7 +81,9 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void changeMod(int change) {
-    if (_mod > -999999999 && _mod < 999999999) {
+    bool small = _mod > -9999999;
+    bool big = _mod < 99999999;
+    if ((big || change < 0) && (small || change > 0)) {
       var temp = _mod;
       if (temp < 0) temp = -temp;
       _mod += change;

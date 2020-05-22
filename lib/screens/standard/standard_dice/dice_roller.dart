@@ -123,7 +123,7 @@ class _DiceRollerState extends State<DiceRoller> {
                       onPressed: () {
                         diceRolls.clear();
                       },
-                      onLongPress: () async {
+                      onLongPress: () {
                         diceRolls.clearAll();
                       }
                     )
@@ -136,13 +136,7 @@ class _DiceRollerState extends State<DiceRoller> {
                         onPressed: () {
                           diceRolls.rollAll();
 
-                          try {
-                            diceRolls.playDiceSounds();
-                          } on Exception {
-                            print('ass');
-                          } catch (e) {
-                            print('ass');
-                          }
+                          diceRolls.playDiceSounds();
                         }
                     )
                 )),

@@ -111,6 +111,9 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                     onPressed: () {
                       diceRolls.clear();
                     },
+                    onLongPress: () async {
+                      diceRolls.clearAll();
+                    }
                   )
                 )),
                 Expanded(flex: 3,child: ModBox()),
@@ -133,7 +136,6 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                                 '/dice_1');
                           }
                           else {
-                            print('a');
                           }
                         }
                     )

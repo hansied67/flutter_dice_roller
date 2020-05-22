@@ -57,9 +57,6 @@ class CustomRolls extends ChangeNotifier {
     var counts = regExpCount.allMatches(_currentRoll).map((m) => m[0]).toList();
     var sides = regExpSides.allMatches(_currentRoll).map((m) => m[0]).toList();
 
-    print("counts: $counts");
-    print("sides: $sides");
-
     for (int i = 0; i < sides.length; i++) {
       sides[i] = sides[i].substring(1, sides[i].length);
     }
@@ -90,7 +87,6 @@ class CustomRolls extends ChangeNotifier {
         counter++;
       }
     }
-    print(_allRolls);
     _currentResult = (_allRolls.reduce((a, b) => a + b)).toString();
     _currentResultInt = int.parse(_currentResult);
     if (isNegMod) {
@@ -149,13 +145,13 @@ class CustomRolls extends ChangeNotifier {
     }
     if (i*_rowSize - _diceDisplays.length != 0)
       _rows.add((Expanded(flex: 1, child: Row(children: _diceDisplays.sublist(i*_rowSize, _diceDisplays.length)))));
+    notifyListeners();
   }
 
   void getItems() async {
     var prefs = await SharedPreferences.getInstance();
     _items = (json.decode(prefs.getString('CustomSet') ?? "{}"));
     _colors = (json.decode(prefs.getString('Colors') ?? "{}"));
-    print(_items);
     _items["null"] = "{}";
     _colors["null"] = ThemeData.dark().cardColor.withAlpha(200).value;
     for (var key in _items.keys) {

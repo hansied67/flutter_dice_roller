@@ -28,11 +28,11 @@ class _DiceButtonDisplayState extends State<DiceButtonDisplay> {
   @override
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
+    final customRolls = Provider.of<CustomRolls>(context);
     return Expanded(
         flex: 1,
         child: InkWell(
             onTap: () async {
-              print('a');
               if (!widget._isCustom) {
                 diceRolls.onTapDec(widget);
               }
@@ -41,7 +41,6 @@ class _DiceButtonDisplayState extends State<DiceButtonDisplay> {
               }
             },
             onLongPress: () async {
-
             },
             child: Stack(children: <Widget> [
               Center(
