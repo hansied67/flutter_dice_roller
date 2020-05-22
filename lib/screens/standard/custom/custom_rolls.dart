@@ -110,6 +110,8 @@ class CustomRolls extends ChangeNotifier {
       await player.stop();
     }
 
+    audioPlayers.clear();
+
     /* play sounds */
     if (!_mute) {
       var soundMap = Map<int, int>();
@@ -187,14 +189,15 @@ class CustomRolls extends ChangeNotifier {
     var item;
 
     /* ensure null CustomCard is last */
-    if (oldIndex < itemsList.length)
+    if (newIndex < itemsList.length) {
       item = itemsList.removeAt(oldIndex);
-    else
-      item = itemsList.removeAt(oldIndex-1);
-    if (newIndex < itemsList.length)
       itemsList.insert(newIndex, item);
-    else
+    }
+    else {
+      item = itemsList.removeAt(oldIndex);
       itemsList.insert(newIndex-1, item);
+    }
+      //itemsList.insert(newIndex-1, item);
 
     for (var itemName in itemsList) {
       tempItems[itemName] = _items[itemName];

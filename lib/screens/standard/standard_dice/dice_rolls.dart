@@ -82,14 +82,24 @@ class DiceRolls extends ChangeNotifier {
 
   void changeMod(int change) {
     if (_mod > -999999999 && _mod < 999999999) {
+      var temp = _mod;
+      if (temp < 0) temp = -temp;
       _mod += change;
-      _totalRolls += change;
-      try {
-        if (_currentDice[_currentDice.length - 2] == '+' ||
-            _currentDice[_currentDice.length - 2] == '-')
-          _currentDice = _currentDice.substring(0, _currentDice.length - 2);
-      } catch (e) {
-        print('not long enough');
+
+      if (_mod > 0)
+        _totalRollsString = _totalRolls.toString() + "+" + _mod.toString() +
+            "=" + (_totalRolls+_mod).toString();
+      else if (_mod < 0)
+        _totalRollsString = _totalRolls.toString() + "-" + (_mod*-1).toString() +
+            "=" + (_totalRolls+_mod).toString();
+      else
+        _totalRollsString = _totalRolls.toString();
+
+      // _totalRolls += change;
+      if (_currentDice.length - 2 > 0) {
+        if (_currentDice[_currentDice.length - (temp.toString().length+1)] == '+' ||
+            _currentDice[_currentDice.length - (temp.toString().length+1)] == '-')
+          _currentDice = _currentDice.substring(0, _currentDice.length - (temp.toString().length+1));
       }
       if (_mod > 0 && _currentDice.length != 0) {
         _currentDice += "+$_mod";
@@ -104,17 +114,29 @@ class DiceRolls extends ChangeNotifier {
 
   void changeModText(int change) {
     _totalRolls -= _mod;
+    var temp = _mod;
+    if (temp < 0) temp = -temp;
     _mod = change;
-    _totalRolls += _mod;
+
+    if (_mod > 0)
+      _totalRollsString = _totalRolls.toString() + "+" + _mod.toString() +
+          "=" + (_totalRolls+_mod).toString();
+    else if (_mod < 0)
+      _totalRollsString = _totalRolls.toString() + "-" + (_mod*-1).toString() +
+          "=" + (_totalRolls+_mod).toString();
+    else
+      _totalRollsString = _totalRolls.toString();
+
+    // _totalRolls += _mod;
     if (_currentDice.length - 2 > 0) {
-      if (_currentDice[_currentDice.length - 2] == '+' ||
-          _currentDice[_currentDice.length - 2] == '-')
-        _currentDice = _currentDice.substring(0, _currentDice.length - 2);
+      if (_currentDice[_currentDice.length - (temp.toString().length+1)] == '+' ||
+          _currentDice[_currentDice.length - (temp.toString().length+1)] == '-')
+        _currentDice = _currentDice.substring(0, _currentDice.length - (temp.toString().length+1));
     }
-    if (_mod > 0) {
+    if (_mod > 0 && _currentDice.length != 0) {
       _currentDice += "+$_mod";
     }
-    else if (_mod < 0) {
+    else if (_mod < 0 && _currentDice.length != 0) {
       _currentDice += "-${_mod*-1}";
     }
     notifyListeners();
@@ -172,6 +194,15 @@ class DiceRolls extends ChangeNotifier {
 
       _allRolls.add(_diceDisplays[_diceDisplays.length - 1].getRoll);
       _totalRolls += _allRolls[_allRolls.length - 1];
+
+      if (_mod > 0)
+        _totalRollsString = _totalRolls.toString() + "+" + _mod.toString() +
+            "=" + (_totalRolls+_mod).toString();
+      else if (_mod < 0)
+        _totalRollsString = _totalRolls.toString() + "-" + (_mod*-1).toString() +
+            "=" + (_totalRolls+_mod).toString();
+      else
+        _totalRollsString = _totalRolls.toString();
 
       _currentDice = "";
       for (var key in _diceCounts.keys) {
@@ -272,10 +303,7 @@ class DiceRolls extends ChangeNotifier {
       _totalRollsString = _totalRolls.toString();
     _totalRolls += _mod;
 
-
     setRows();
-
-
 
     _allInfoTime.add(Tuple5("Roll", _currentDice, _totalRollsString, _totalRolls.toString(), new List<Expanded>.from(_rows)));
     _allInfo.add(Tuple5("Roll", _currentDice, _totalRollsString, _totalRolls.toString(), new List<Expanded>.from(_rows)));
@@ -298,6 +326,7 @@ class DiceRolls extends ChangeNotifier {
   void clearAll() {
     _totalRolls = 0;
     _mod = 0;
+    _totalRollsString = "";
     clear();
   }
 
@@ -387,4 +416,5 @@ class DiceRolls extends ChangeNotifier {
   Tuple3<String, String, List<Expanded>> get historyInfo => _historyInfo;
   String get sortSelection => _sortSelection;
   String get ascendingDescending => _sortBy;
+  String get totalRollsString => _totalRollsString;
 }

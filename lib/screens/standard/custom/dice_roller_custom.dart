@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/mod_box.dart';
 import 'package:provider/provider.dart';
@@ -71,12 +72,13 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                       child: Container(
                           alignment: Alignment.centerRight,
                           padding: new EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
+                          child: AutoSizeText(
                               "Roll: " + diceRolls.currentDice,
                               textAlign: TextAlign.right,
                               style: TextStyle(
                                   fontSize: 15.0
-                              )
+                              ),
+                              minFontSize: 5.0,
                           )
                       )
                   )

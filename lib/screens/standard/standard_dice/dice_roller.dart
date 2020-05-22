@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/global_widgets/auto_text.dart';
 import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
@@ -73,12 +74,13 @@ class _DiceRollerState extends State<DiceRoller> {
                   child: Container(
                     alignment: Alignment.centerRight,
                     padding: new EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text(
-                      "Total: " + diceRolls.getTotalRolls.toString(),
+                    child: AutoSizeText(
+                      "Total: " + diceRolls.totalRollsString,
                       textAlign: TextAlign.right,
                       style: TextStyle(
                           fontSize: 25.0
-                      )
+                      ),
+                      minFontSize: 5.0,
                     )
                   )
                 )
