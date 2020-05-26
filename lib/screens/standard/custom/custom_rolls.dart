@@ -38,6 +38,8 @@ class CustomRolls extends ChangeNotifier {
 
   bool _swap = true;
 
+  Map<int, int> _diceCounts = {4: 0, 6: 0, 8: 0, 10: 0, 12: 0, 20: 0, 100: 0};
+
   CustomRolls() {
     getItems();
 
@@ -46,9 +48,71 @@ class CustomRolls extends ChangeNotifier {
     notifyListeners();
   }
 
+  void getItems() async {
+    var prefs = await SharedPreferences.getInstance();
+    _items = (json.decode(prefs.getString('CustomSet') ?? "{}"));
+    _colors = (json.decode(prefs.getString('Colors') ?? "{}"));
+    _items["null"] = "{}";
+    _colors["null"] = ThemeData.dark().cardColor.withAlpha(200).value;
+    for (var key in _items.keys) {
+      if (!_colors.containsKey(key)) {
+        _colors[key] = ThemeData.dark().cardColor.value;
+      }
+    }
+    await prefs.setString('Colors', json.encode(_colors));
+    notifyListeners();
+  }
+
+  void getMuteFile() async {
+    var prefs = await SharedPreferences.getInstance();
+    _mute = prefs.getBool('Mute') ?? false;
+    _swap = prefs.getBool('Swap') ?? true;
+    notifyListeners();
+  }
+
   void changeMute() {
     _mute = !_mute;
     notifyListeners();
+  }
+
+  void setInfo(String name, List info) {
+    _currentName = name;
+    _currentRoll = info[2];
+    notifyListeners();
+  }
+
+  List getInfo(String roll) {
+    _currentRoll = roll;
+    var counts = regExpCount.allMatches(_currentRoll).map((m) => m[0]).toList();
+    var sides = regExpSides.allMatches(_currentRoll).map((m) => m[0]).toList();
+
+    for (int i = 0; i < sides.length; i++) {
+      sides[i] = sides[i].substring(1, sides[i].length);
+    }
+
+    var isNegMod = regExpMinus.hasMatch(_currentRoll);
+    var pluses = regExpPlus.allMatches(_currentRoll).map((m) => m[0]).toList();
+    var mod = sides.length == pluses.length ?
+    regExpMod.stringMatch(_currentRoll) :
+    "0";
+    if (isNegMod) {
+      mod = (int.parse(regExpMod.stringMatch(_currentRoll)) * -1).toString();
+    }
+
+    for (var key in _diceCounts.keys) {
+      _diceCounts[key] = 0;
+    }
+
+    for (int i=0; i<counts.length; i++) {
+      _diceCounts[int.parse(sides[i])] = int.parse(counts[i]);
+    }
+
+    List temp = new List();
+    temp.add(_diceCounts);
+    temp.add(mod);
+    temp.add(roll);
+
+    return temp;
   }
 
   void doRoll() async {
@@ -87,6 +151,9 @@ class CustomRolls extends ChangeNotifier {
         counter++;
       }
     }
+
+    print(_diceCounts);
+
     _currentResult = (_allRolls.reduce((a, b) => a + b)).toString();
     _currentResultInt = int.parse(_currentResult);
     if (isNegMod) {
@@ -148,28 +215,14 @@ class CustomRolls extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getItems() async {
-    var prefs = await SharedPreferences.getInstance();
-    _items = (json.decode(prefs.getString('CustomSet') ?? "{}"));
-    _colors = (json.decode(prefs.getString('Colors') ?? "{}"));
-    _items["null"] = "{}";
-    _colors["null"] = ThemeData.dark().cardColor.withAlpha(200).value;
-    for (var key in _items.keys) {
-      if (!_colors.containsKey(key)) {
-        _colors[key] = ThemeData.dark().cardColor.value;
-      }
-    }
-    await prefs.setString('Colors', json.encode(_colors));
-    notifyListeners();
-  }
-
   void addItem(String name, Map<String, dynamic> info) async {
     var prefs = await SharedPreferences.getInstance();
 
     _items.remove("null");
     _items[name] = info;
     _items["null"] = "{}";
-    _colors[name] = ThemeData.dark().cardColor.value;
+    if (_colors[name] == null)
+      _colors[name] = ThemeData.dark().cardColor.value;
     await prefs.setString('CustomSet', json.encode(_items));
     await prefs.setString('Colors', json.encode(_colors));
     notifyListeners();
@@ -205,8 +258,12 @@ class CustomRolls extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSwapButton() {
+  void setSwapButton() async {
     _swap = !_swap;
+
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("Swap", _swap);
+
     notifyListeners();
   }
 
@@ -223,12 +280,6 @@ class CustomRolls extends ChangeNotifier {
     _colors.remove(name);
     await prefs.setString('CustomSet', json.encode(_items));
     await prefs.setString('Colors', json.encode(_colors));
-    notifyListeners();
-  }
-
-  void getMuteFile() async {
-    var prefs = await SharedPreferences.getInstance();
-    _mute = prefs.getBool('Mute') ?? false;
     notifyListeners();
   }
 

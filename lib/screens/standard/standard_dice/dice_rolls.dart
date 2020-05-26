@@ -46,6 +46,24 @@ class DiceRolls extends ChangeNotifier {
     getMuteFile();
   }
 
+  void setInfo(List list) {
+    _diceCounts = list[0];
+    _mod = int.parse(list[1]);
+    _currentDice = list[2];
+    _diceButtonsDisplay.clear();
+    for (int key in _diceCounts.keys) {
+      var _isCustom = ![4, 6, 8, 10, 12, 20, 100].contains(key);
+      if (_diceCounts[key] > 0) {
+        _diceButtonsDisplay.add(DiceButtonDisplay(
+            num: _diceCounts[key],
+            sides: key,
+            isCustom: _isCustom
+        ));
+      }
+    }
+    notifyListeners();
+  }
+
   void resetCustom() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _diceCounts.remove(_custom);
@@ -275,6 +293,14 @@ class DiceRolls extends ChangeNotifier {
         else
           _currentDice += " + " + _diceCounts[key].toString() + _currentDie;
     }
+
+    if (_mod > 0) {
+      _currentDice += "+$_mod";
+    }
+    else if (_mod < 0) {
+      _currentDice += "-${_mod * -1}";
+    }
+
     notifyListeners();
   }
 

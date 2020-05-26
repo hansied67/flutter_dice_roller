@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutterdiceroller/screens/characters/character_creation/character_creation.dart';
+import 'package:flutterdiceroller/screens/characters/character_creation/character_creation_screen.dart';
+import 'package:flutterdiceroller/screens/characters/character_screen.dart';
 import 'package:flutterdiceroller/screens/standard/history/history_screen.dart';
 import 'dart:io' show Platform;
 import 'package:provider/provider.dart';
@@ -18,6 +21,7 @@ void main() {
           ChangeNotifierProvider(create: (context) => DiceRolls()),
           ChangeNotifierProvider(create: (context) => GlobalVariables()),
           ChangeNotifierProvider(create: (context) => CustomRolls()),
+          ChangeNotifierProvider(create: (context) => CharacterCreation()),
         ],
         child: MyApp())
       );
@@ -57,7 +61,9 @@ class MyApp extends StatelessWidget {
         '/dice_1': (context) => StandardScreen(page: 1),
         '/dice_custom': (context) => DiceRollerCustom(),
         '/settings': (context) => SettingsScreen(),
-        '/history': (context) => HistoryScreen()
+        '/history': (context) => HistoryScreen(),
+        '/characters': (context) => CharacterScreen(),
+        '/character_creation': (context) => CharacterCreationScreen(),
       }
     );
   }

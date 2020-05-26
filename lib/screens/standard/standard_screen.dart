@@ -129,6 +129,7 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
                 title: Text("Character"),
                 onTap: () {
                   // TODO: go to character screen (PushReplacementNamed)
+                  Navigator.pushReplacementNamed(context, '/characters');
                 },
                 trailing: globalVariables.isAndroid ? Icon(Icons.arrow_forward) :
                     Icon(Icons.arrow_forward_ios)
@@ -191,13 +192,14 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
       floatingActionButton: _currentIndex == 1 ? Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            FloatingActionButton(
+            FloatingActionButton.extended(
                 heroTag: "btn1",
                 onPressed: () {
                   customRolls.setSwapButton();
                 },
-                child: customRolls.swap ?
-                    Icon(Icons.rotate_right) :
+                label: Text("Long Press"),
+                icon: customRolls.swap ?
+                    Icon(Icons.swap_horiz) :
                     Icon(Icons.edit),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
             ),
