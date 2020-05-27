@@ -66,7 +66,6 @@ class CustomRolls extends ChangeNotifier {
   void getMuteFile() async {
     var prefs = await SharedPreferences.getInstance();
     _mute = prefs.getBool('Mute') ?? false;
-    _swap = prefs.getBool('Swap') ?? true;
     notifyListeners();
   }
 
@@ -260,9 +259,6 @@ class CustomRolls extends ChangeNotifier {
 
   void setSwapButton() async {
     _swap = !_swap;
-
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("Swap", _swap);
 
     notifyListeners();
   }

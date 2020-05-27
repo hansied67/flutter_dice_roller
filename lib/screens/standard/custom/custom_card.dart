@@ -98,65 +98,74 @@ class _CustomCardState extends State<CustomCard> {
     final diceRolls = Provider.of<DiceRolls>(context);
       return widget.keyString != "null" ? Card(
           color: widget.color,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: customRolls.swap ? Colors.transparent : Colors.white,
+              width: 2.0,
+            ),
+            borderRadius: BorderRadius.circular(4.0)
+          ),
           child: InkWell(
               // splashColor: Colors.deepPurple,
-              onLongPress: customRolls.swap ? null : () {
-                showDialog(
-                    context: context,
-                    child: AlertDialog(
-                      title: const Text ('Pick a color'),
-                      content: SingleChildScrollView(
-                          child: BlockPicker(
-                            pickerColor: widget.color,
-                            onColorChanged: (value) => customRolls.confirmColor(value, widget.keyString),
-                          )
-                      ),
-                      actions: [
-                        FlatButton(
-                          child: const Text('Delete'),
-                          onPressed: () {
-                            customRolls.removeItem(widget.keyString);
-                            Navigator.of(context).pop();
-                          },
+              onTap: () {
+                if (customRolls.swap) {
+                  customRolls.setCurrentName(widget.keyString);
+                  customRolls.setCurrentRoll(widget.value.values.elementAt(0));
+                  customRolls.doRoll();
+                  setState(() {
+                    diceRolls.allInfoTime.add(Tuple5(
+                        customRolls.currentName,
+                        customRolls.currentRoll,
+                        customRolls.currentResult,
+                        customRolls.currentResultInt.toString(),
+                        new List<Expanded>.from(customRolls.rows)));
+                    diceRolls.allInfo.add(Tuple5(
+                        customRolls.currentName,
+                        customRolls.currentRoll,
+                        customRolls.currentResult,
+                        customRolls.currentResultInt.toString(),
+                        new List<Expanded>.from(customRolls.rows)));
+                  });
+                }
+                else {
+                  showDialog(
+                      context: context,
+                      child: AlertDialog(
+                        title: const Text ('Pick a color'),
+                        content: SingleChildScrollView(
+                            child: BlockPicker(
+                              pickerColor: widget.color,
+                              onColorChanged: (value) => customRolls.confirmColor(value, widget.keyString),
+                            )
                         ),
-                        FlatButton(
-                          child: const Text('Edit'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            var info = customRolls.getInfo(widget.value.values.elementAt(0));
-                            diceRolls.setInfo(info);
-                            customRolls.setInfo(widget.keyString, info);
-                            Navigator.of(context).pushNamed('/dice_custom');
-                          },
-                        ),
-                        FlatButton(
-                            child: const Text('Ok'),
+                        actions: [
+                          FlatButton(
+                            child: const Text('Delete'),
+                            onPressed: () {
+                              customRolls.removeItem(widget.keyString);
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: const Text('Edit'),
                             onPressed: () {
                               Navigator.of(context).pop();
-                            }
-                        )
-                      ],
-                    )
-                );
-              },
-              onTap: () {
-                customRolls.setCurrentName(widget.keyString);
-                customRolls.setCurrentRoll(widget.value.values.elementAt(0));
-                customRolls.doRoll();
-                setState(() {
-                  diceRolls.allInfoTime.add(Tuple5(
-                      customRolls.currentName,
-                      customRolls.currentRoll,
-                      customRolls.currentResult,
-                      customRolls.currentResultInt.toString(),
-                      new List<Expanded>.from(customRolls.rows)));
-                  diceRolls.allInfo.add(Tuple5(
-                      customRolls.currentName,
-                      customRolls.currentRoll,
-                      customRolls.currentResult,
-                      customRolls.currentResultInt.toString(),
-                      new List<Expanded>.from(customRolls.rows)));
-                });
+                              var info = customRolls.getInfo(widget.value.values.elementAt(0));
+                              diceRolls.setInfo(info);
+                              customRolls.setInfo(widget.keyString, info);
+                              Navigator.of(context).pushNamed('/dice_custom');
+                            },
+                          ),
+                          FlatButton(
+                              child: const Text('Ok'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }
+                          )
+                        ],
+                      )
+                  );
+                }
               },
               child: Column(
                 mainAxisSize: MainAxisSize.min,

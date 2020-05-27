@@ -189,22 +189,39 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
               CustomRoller(),
           ]
       ),
-      floatingActionButton: _currentIndex == 1 ? Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
+      floatingActionButton: _currentIndex == 1 ?
+            customRolls.swap ?
+            Tooltip(
+              decoration: BoxDecoration(
+                color: Color(0xFF202020),
+              ),
+              textStyle: TextStyle(color: Colors.white),
+              message: "Long Press buttons to reorder",
+              child: FloatingActionButton.extended(
                 heroTag: "btn1",
                 onPressed: () {
                   customRolls.setSwapButton();
                 },
-                label: Text("Long Press"),
-                icon: customRolls.swap ?
-                    Icon(Icons.swap_horiz) :
-                    Icon(Icons.edit),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-            ),
-          ]
-      ) : Container()
+                label: Text("Edit"),
+                icon: Icon(Icons.edit),
+              )
+            ) :
+            Tooltip(
+                decoration: BoxDecoration(
+                  color: Color(0xFF202020),
+                ),
+                textStyle: TextStyle(color: Colors.white),
+                message: "Tap buttons to edit",
+                child: FloatingActionButton.extended(
+                  heroTag: "btn1",
+                  onPressed: () {
+                    customRolls.setSwapButton();
+                  },
+                  label: Text("Cancel"),
+                  icon: Icon(Icons.edit),
+                )
+            )
+          : Container()
     );
   }
 }
