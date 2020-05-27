@@ -48,6 +48,10 @@ class DiceRolls extends ChangeNotifier {
 
   void setInfo(List list) {
     _diceCounts = list[0];
+
+    if (_diceCounts[_custom] == null) {
+      _diceCounts[_custom] = 0;
+    }
     _mod = int.parse(list[1]);
     _currentDice = list[2];
     _diceButtonsDisplay.clear();

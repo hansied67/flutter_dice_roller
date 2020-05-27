@@ -79,54 +79,45 @@ class _CustomFormState extends State<CustomForm> {
       key: _formKey,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  maxLength: 50,
-                  controller: _name,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "You must input a name.";
-                    }
-                    return null;
-                  },
-                  onFieldSubmitted: (text) {
-                    if (_formKey.currentState.validate()) {
-                      print("name");
-                    }
-                  }
-                )
-              ),
-              Flexible(
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  maxLength: 30,
-                  controller: _class,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    labelText: 'Class',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "You must input a class.";
-                    }
-                    return null;
-                  },
-                  onFieldSubmitted: (text) {
-                    if (_formKey.currentState.validate()) {
-                      print("class");
-                    }
-                  }
-                )
-              )
-            ]
+          TextFormField(
+            textAlign: TextAlign.center,
+            maxLength: 50,
+            controller: _name,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              labelText: 'Name',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "You must input a name.";
+              }
+              return null;
+            },
+            onFieldSubmitted: (text) {
+              if (_formKey.currentState.validate()) {
+                print("name");
+              }
+            }
+          ),
+          TextFormField(
+            textAlign: TextAlign.center,
+            maxLength: 30,
+            controller: _class,
+            textCapitalization: TextCapitalization.sentences,
+            decoration: InputDecoration(
+              labelText: 'Class',
+            ),
+            validator: (value) {
+              if (value.isEmpty) {
+                return "You must input a class.";
+              }
+              return null;
+            },
+            onFieldSubmitted: (text) {
+              if (_formKey.currentState.validate()) {
+                print("class");
+              }
+            }
           ),
           RadioListTile(
             title: Text("Roll New Stats"),
@@ -140,7 +131,7 @@ class _CustomFormState extends State<CustomForm> {
           ),
           RadioListTile(
             title: Text("Manual Stats Entry"),
-            value: "ManualStats Entry",
+            value: "Manual Stats Entry",
             groupValue: _statChoice,
             onChanged: (value) {
               setState(() {

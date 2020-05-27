@@ -43,10 +43,7 @@ class _CustomCardState extends State<CustomCard> {
                               controller: _controller,
                               autofocus: true,
                               textCapitalization: TextCapitalization.sentences,
-                              decoration: InputDecoration(
-                                labelText: 'Name', hintText: 'Potion of Healing',
-                                errorText: _validate ? "Value Can't Be Empty" : null,
-                              ),
+                              decoration: InputDecoration(labelText: 'Name'),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return "Value can't be empty";
@@ -69,10 +66,11 @@ class _CustomCardState extends State<CustomCard> {
               FlatButton(
                   child: Text('Input Dice'),
                   onPressed: () async {
-                    if (_formKey.currentState.validate())
+                    if (_formKey.currentState.validate()) {
                       customRolls.setCurrentName(_controller.text);
                       Navigator.of(context).pushReplacementNamed(
                           '/dice_custom');
+                    }
                   },
               )
             ],
