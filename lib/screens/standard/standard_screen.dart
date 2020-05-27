@@ -218,10 +218,12 @@ class _StandardScreenState extends State<StandardScreen> with TickerProviderStat
                     customRolls.setSwapButton();
                   },
                   label: Text("Cancel"),
-                  icon: Icon(Icons.edit),
+                  icon: Icon(Icons.rotate_left),
                 )
             )
-          : Container()
+          : Container(),
+        floatingActionButtonLocation: customRolls.swap ?
+            FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.startFloat,
     );
   }
 }
