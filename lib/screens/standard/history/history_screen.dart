@@ -45,8 +45,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Expanded(
               flex: 3,
               child: Material(color: Color(0xFF202020), child: Column(
-                children: diceRolls.historyInfo.item3.length != 0 ? diceRolls.historyInfo.item3 :
-                    [Container()]
+                children: (diceRolls.historyInfo.item3.length <= 20 && diceRolls.historyInfo.item3.length != 0) ?
+                diceRolls.historyInfo.item3 : (diceRolls.historyInfo.item3.length > 20) ?
+                diceRolls.historyInfo.item3.sublist(0, 20) : [Container()]
               )
             )),
             Expanded(

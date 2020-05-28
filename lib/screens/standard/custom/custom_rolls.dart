@@ -276,6 +276,7 @@ class CustomRolls extends ChangeNotifier {
     _colors.remove(name);
     await prefs.setString('CustomSet', json.encode(_items));
     await prefs.setString('Colors', json.encode(_colors));
+    clear();
     notifyListeners();
   }
 
@@ -298,7 +299,7 @@ class CustomRolls extends ChangeNotifier {
     _colors["null"] = ThemeData.dark().cardColor.withAlpha(200).value;
     await prefs.setString('CustomSet', json.encode(_items));
     await prefs.setString('Colors', json.encode(_colors));
-
+    clear();
   }
 
   void setCurrentName(String name) { _currentName = name; notifyListeners(); }

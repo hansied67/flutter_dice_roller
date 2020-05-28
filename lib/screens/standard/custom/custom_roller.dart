@@ -80,7 +80,8 @@ class _CustomRollerState extends State<CustomRoller> {
                   Expanded(
                     flex: 1,
                     child: Column(
-                      children: customRolls.rows,
+                      children: customRolls.rows.length <= 20 ?
+                        customRolls.rows : customRolls.rows.sublist(0, 20)
                     )
                   ),
                 ],

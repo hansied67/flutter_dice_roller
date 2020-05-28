@@ -214,7 +214,7 @@ class DiceRolls extends ChangeNotifier {
   }
 
   void onTap(DiceButton button) {
-    if ((_allRolls.length < 40 || globalVariables.isMobile == false)) {
+    if ((_allRolls.length < 100 || globalVariables.isMobile == true)) {
       if (!_mute)
         button.playSound();
       _diceCounts[button.getSides]++;
