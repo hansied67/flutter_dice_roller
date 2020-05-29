@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'character_creation.dart';
 
 class CustomForm extends StatefulWidget {
-  CustomForm({Key key}) : super(key: key);
+  CustomForm({Key key, PageController controller}) : super(key: key);
 
   @override
   _CustomFormState createState() => _CustomFormState();
@@ -31,7 +31,7 @@ class _CustomFormState extends State<CustomForm> {
     for (var stat in characterCreation.statsDict.keys) {
       _stats.add(StatRollDisplay(stat: stat));
     }
-  if (!characterCreation.didRoll)
+    if (!characterCreation.didRoll)
       _stats.add(Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FlatButton(color: Theme.of(context).buttonColor,
@@ -140,7 +140,9 @@ class _CustomFormState extends State<CustomForm> {
             }
           ),
           _statChoice == "Roll New Stats" ? Column(
-            children: _stats
+            children: [
+
+            ]
           ) : Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

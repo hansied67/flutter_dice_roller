@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import '../../../global_variables.dart';
 import 'custom_rolls.dart';
 
 class CustomCard extends StatefulWidget {
@@ -94,6 +95,7 @@ class _CustomCardState extends State<CustomCard> {
   Widget build(BuildContext context) {
     final customRolls = Provider.of<CustomRolls>(context);
     final diceRolls = Provider.of<DiceRolls>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
       return widget.keyString != "null" ? Card(
           color: widget.color,
           shape: RoundedRectangleBorder(
@@ -169,8 +171,8 @@ class _CustomCardState extends State<CustomCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                      height: 35,
-                      width: 70,
+                      height: globalVariables.isMobile ? 35 : 50,
+                      width: globalVariables.isMobile ? 70 : 100,
                       alignment: Alignment.center,
                       child: AutoSizeText(
                           widget.keyString,
@@ -180,8 +182,8 @@ class _CustomCardState extends State<CustomCard> {
                       )
                   ),
                   Container(
-                      height: 35,
-                      width: 70,
+                      height: globalVariables.isMobile ? 35 : 50,
+                      width: globalVariables.isMobile ? 70 : 100,
                       alignment: Alignment.center,
                       child: AutoSizeText(
                           widget.value.values.elementAt(0),
@@ -199,8 +201,8 @@ class _CustomCardState extends State<CustomCard> {
             onTap: () => _getInputDialogCustom(context, customRolls),
             onLongPress: () => _getInputDialogCustom(context, customRolls),
             child: Container(
-                height: 70,
-                width: 70,
+                height: globalVariables.isMobile ? 70 : 100,
+                width: globalVariables.isMobile ? 70 : 100,
                 child: Icon(Icons.add)
             )
         )

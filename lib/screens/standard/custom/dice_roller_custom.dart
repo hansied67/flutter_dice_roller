@@ -7,6 +7,8 @@ import 'package:flutterdiceroller/global_widgets/auto_text.dart';
 import 'package:flutterdiceroller/screens/standard/standard_dice/dice_rolls.dart';
 import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 
+import '../../../global_variables.dart';
+
 class DiceRollerCustom extends StatefulWidget {
   DiceRollerCustom({Key key}) : super(key: key);
 
@@ -29,6 +31,7 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
   Widget build(BuildContext context) {
     final customRolls = Provider.of<CustomRolls>(context);
     final diceRolls = Provider.of<DiceRolls>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
     return WillPopScope(
       onWillPop: () async {
         customRolls.clear();
@@ -70,7 +73,7 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                       )
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: globalVariables.isMobile ? 3 : 1,
                       child: Slider(
                           value: diceRolls.volume,
                           min: 0.0,

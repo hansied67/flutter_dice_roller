@@ -8,10 +8,10 @@ class GlobalVariables extends ChangeNotifier {
   GlobalVariables() {
     try {
       _isAndroid = Platform.isAndroid;
-      _isMobile = false;
+      _isMobile = true;
     } catch (e) {
       _isAndroid = true;
-      _isMobile = true;
+      _isMobile = false;
     }
   }
 

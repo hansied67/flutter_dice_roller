@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../../global_variables.dart';
 import 'custom_card.dart';
 import 'custom_rolls.dart';
 
@@ -59,6 +60,7 @@ class _CustomRollerState extends State<CustomRoller> {
   Widget build(BuildContext context) {
     final customRolls = Provider.of<CustomRolls>(context);
     final diceRolls = Provider.of<DiceRolls>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
 
     void _onReorder(int oldIndex, int newIndex) {
       setState(() {
@@ -111,6 +113,7 @@ class _CustomRollerState extends State<CustomRoller> {
                   )
               ),
               Expanded(
+                flex: globalVariables.isMobile ? 3 : 1,
                 child: Slider(
                     value: diceRolls.volume,
                     min: 0.0,
@@ -122,6 +125,7 @@ class _CustomRollerState extends State<CustomRoller> {
                 )
               ),
               Expanded(
+                flex: 3,
                   child: Padding(
                       padding: new EdgeInsets.only(right: 8.0),
                         child: AutoSizeText(

@@ -11,7 +11,6 @@ import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 import 'package:flutterdiceroller/screens/standard/custom/dice_button_display.dart';
 
 class DiceRolls extends ChangeNotifier {
-  final globalVariables = GlobalVariables();
   final _rowSize = 5;
 
   double _volume = 1.0;
@@ -215,7 +214,7 @@ class DiceRolls extends ChangeNotifier {
       _rows.add((Expanded(flex: 1, child: Row(children: _diceDisplays.sublist(i*_rowSize, _diceDisplays.length)))));
   }
 
-  void onTap(DiceButton button) {
+  void onTap(DiceButton button, var globalVariables) {
     if ((_allRolls.length < 100 || globalVariables.isMobile == true)) {
       if (!_mute)
         button.playSound(_volume);

@@ -10,6 +10,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'dice_roller.dart';
 import 'dice_rolls.dart';
 import 'mod_box.dart';
+import '../../../global_variables.dart';
 
 class DiceButton extends StatefulWidget {
 
@@ -174,16 +175,17 @@ class _DiceButtonState extends State<DiceButton> {
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
     final customRolls = Provider.of<CustomRolls>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
     return Expanded(
         flex: 1,
         child: InkWell(
           splashColor: Color(0xFF2a2a2a),
           onTap: () async {
             if (!widget._isCustom) {
-              diceRolls.onTap(widget);
+              diceRolls.onTap(widget, globalVariables);
             }
             else
-              diceRolls.onTap(DiceButton(sides: diceRolls.getCustom, isCustom: true));
+              diceRolls.onTap(DiceButton(sides: diceRolls.getCustom, isCustom: true), globalVariables);
           },
           onLongPress: () async {
             if (widget._isCustom)

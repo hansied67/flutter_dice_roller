@@ -5,6 +5,7 @@ import 'package:flutterdiceroller/global_widgets/auto_text.dart';
 import 'package:flutterdiceroller/screens/standard/custom/custom_rolls.dart';
 import 'package:provider/provider.dart';
 
+import '../../../global_variables.dart';
 import 'dice_button.dart';
 import 'dice_rolls.dart';
 import 'mod_box.dart';
@@ -26,6 +27,7 @@ class _DiceRollerState extends State<DiceRoller> {
   Widget build(BuildContext context) {
     final diceRolls = Provider.of<DiceRolls>(context);
     final customRolls = Provider.of<CustomRolls>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
 
     return Column(
       children: <Widget>[
@@ -67,7 +69,7 @@ class _DiceRollerState extends State<DiceRoller> {
                     )
                 ),
                 Expanded(
-                  flex: 3,
+                  flex: globalVariables.isMobile ? 3 : 1,
                   child: Slider(
                       value: diceRolls.volume,
                       min: 0.0,
