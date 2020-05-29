@@ -58,18 +58,15 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                   ),
                   child: Row(
                   children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        child: IconButton(
-                          icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
-                          onPressed: () {
-                            setState(() {
-                              diceRolls.changeMute();
-                              customRolls.changeMute();
-                            });
-                          },
-                        )
+                    Container(
+                      child: IconButton(
+                        icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
+                        onPressed: () {
+                          setState(() {
+                            diceRolls.changeMute();
+                            customRolls.changeMute();
+                          });
+                        },
                       )
                     ),
                     Expanded(

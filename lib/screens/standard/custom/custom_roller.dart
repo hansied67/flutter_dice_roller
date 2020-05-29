@@ -124,14 +124,14 @@ class _CustomRollerState extends State<CustomRoller> {
               Expanded(
                   child: Padding(
                       padding: new EdgeInsets.only(right: 8.0),
-                      child: Container(
                         child: AutoSizeText(
-                          customRolls.currentName + ": " + customRolls.currentResult,
+                          customRolls.currentName.length > 0 ?
+                            customRolls.currentName + ": " + customRolls.currentResult :
+                            "",
                           style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent),
                           textAlign: TextAlign.right,
                           maxLines: 1,
                         )
-                      )
                   )
               ),
             ],

@@ -55,9 +55,7 @@ class _DiceRollerState extends State<DiceRoller> {
               ),
               child: Row(
               children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Container(
+                Container(
                     child: IconButton(
                       icon: diceRolls.getMute ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
                       onPressed: () {
@@ -67,7 +65,6 @@ class _DiceRollerState extends State<DiceRoller> {
                         });
                       },
                     )
-                  )
                 ),
                 Expanded(
                   flex: 3,

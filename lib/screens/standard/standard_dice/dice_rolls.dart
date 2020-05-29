@@ -456,7 +456,7 @@ class DiceRolls extends ChangeNotifier {
     }
   }
 
-  void setVolume(double newVolume) {_volume = newVolume; print(_volume); notifyListeners(); }
+  void setVolume(double newVolume) {_volume = newVolume; if (_volume == 0.0) _mute = true; else _mute = false; notifyListeners(); }
 
   int get getCurrentRoll => _totalRolls;
   Map<int, int> get getDiceCounts => _diceCounts;
