@@ -73,7 +73,19 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                       )
                     ),
                     Expanded(
-                        flex: 6,
+                      flex: 3,
+                      child: Slider(
+                          value: diceRolls.volume,
+                          min: 0.0,
+                          max: 1.0,
+                          label: diceRolls.volume.toString(),
+                          onChanged: (double newValue) {
+                            diceRolls.setVolume(newValue);
+                          }
+                      )
+                    ),
+                    Expanded(
+                        flex: 3,
                         child: Container(
                             alignment: Alignment.centerRight,
                             padding: new EdgeInsets.symmetric(horizontal: 10.0),
@@ -135,7 +147,7 @@ class _DiceRollerCustomState extends State<DiceRollerCustom> {
                                 });
                                 diceRolls.clearAll();
                                 // customRolls.clear();
-                                customRolls.doRoll();
+                                customRolls.doRoll(diceRolls.volume);
                               });
                               Navigator.of(context).pushReplacementNamed(
                                   '/dice_1');

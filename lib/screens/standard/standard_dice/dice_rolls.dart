@@ -14,6 +14,8 @@ class DiceRolls extends ChangeNotifier {
   final globalVariables = GlobalVariables();
   final _rowSize = 5;
 
+  double _volume = 1.0;
+
   int _mod = 0;
   int _custom = 2;
   bool _mute = false;
@@ -216,7 +218,7 @@ class DiceRolls extends ChangeNotifier {
   void onTap(DiceButton button) {
     if ((_allRolls.length < 100 || globalVariables.isMobile == true)) {
       if (!_mute)
-        button.playSound();
+        button.playSound(_volume);
       _diceCounts[button.getSides]++;
 
       _diceDisplays.add(
@@ -435,24 +437,26 @@ class DiceRolls extends ChangeNotifier {
       for (int key in _diceCounts.keys) {
         if ([4, 6, 8, 10, 12, 20, 100].contains(key)) {
           if (_diceCounts[key] == 1) {
-            audioPlayers.add(await _diceButtons[count].playSound());
+            audioPlayers.add(await _diceButtons[count].playSound(_volume));
           }
           else if (_diceCounts[key] > 1) {
-            audioPlayers.add(await _diceButtons[count].playMultiple());
+            audioPlayers.add(await _diceButtons[count].playMultiple(_volume));
           }
         }
         else {
           if (_diceCounts[key] == 1) {
-            audioPlayers.add(await DiceButton(isCustom: true).playSound());
+            audioPlayers.add(await DiceButton(isCustom: true).playSound(_volume));
           }
           else if (_diceCounts[key] > 1) {
-            audioPlayers.add(await DiceButton(isCustom: true).playMultiple());
+            audioPlayers.add(await DiceButton(isCustom: true).playMultiple(_volume));
           }
         }
         count++;
       }
     }
   }
+
+  void setVolume(double newVolume) {_volume = newVolume; print(_volume); notifyListeners(); }
 
   int get getCurrentRoll => _totalRolls;
   Map<int, int> get getDiceCounts => _diceCounts;
@@ -471,4 +475,5 @@ class DiceRolls extends ChangeNotifier {
   String get sortSelection => _sortSelection;
   String get ascendingDescending => _sortBy;
   String get totalRollsString => _totalRollsString;
+  double get volume => _volume;
 }

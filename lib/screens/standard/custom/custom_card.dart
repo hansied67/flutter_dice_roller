@@ -109,7 +109,7 @@ class _CustomCardState extends State<CustomCard> {
                 if (customRolls.swap) {
                   customRolls.setCurrentName(widget.keyString);
                   customRolls.setCurrentRoll(widget.value.values.elementAt(0));
-                  customRolls.doRoll();
+                  customRolls.doRoll(diceRolls.volume);
                   setState(() {
                     diceRolls.allInfoTime.add(Tuple5(
                         customRolls.currentName,

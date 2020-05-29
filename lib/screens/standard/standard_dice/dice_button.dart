@@ -48,35 +48,35 @@ class DiceButton extends StatefulWidget {
   int _sides;
   bool _isCustom;
 
-  Future<AudioPlayer> playSound() async {
+  Future<AudioPlayer> playSound(double volume) async {
     if (_sides == 4)
-      player = await cache.play(d4Sounds[rng.nextInt(d4Sounds.length)]);
+      player = await cache.play(d4Sounds[rng.nextInt(d4Sounds.length)], volume: volume);
     else if (_sides == 6)
-      player = await cache.play(d6Sounds[rng.nextInt(d6Sounds.length)]);
+      player = await cache.play(d6Sounds[rng.nextInt(d6Sounds.length)], volume: volume);
     else if (_sides == 8)
-      player = await cache.play(d8Sounds[rng.nextInt(d8Sounds.length)]);
+      player = await cache.play(d8Sounds[rng.nextInt(d8Sounds.length)], volume: volume);
     else if (_sides == 10)
-      player = await cache.play(d10Sounds[rng.nextInt(d10Sounds.length)]);
+      player = await cache.play(d10Sounds[rng.nextInt(d10Sounds.length)], volume: volume);
     else if (_sides == 12)
-      player = await cache.play(d12Sounds[rng.nextInt(d12Sounds.length)]);
+      player = await cache.play(d12Sounds[rng.nextInt(d12Sounds.length)], volume: volume);
     else
-      player = await cache.play(d20Sounds[rng.nextInt(d20Sounds.length)]);
+      player = await cache.play(d20Sounds[rng.nextInt(d20Sounds.length)], volume: volume);
     return player;
   }
 
-  Future<AudioPlayer> playMultiple() async {
+  Future<AudioPlayer> playMultiple(double volume) async {
     if (_sides == 4)
-      player = await cache.play(d4Multiple);
+      player = await cache.play(d4Multiple, volume: volume);
     else if (_sides == 6)
-      player = await cache.play(d6Multiple);
+      player = await cache.play(d6Multiple, volume: volume);
     else if (_sides == 8)
-      player = await cache.play(d8Multiple);
+      player = await cache.play(d8Multiple, volume: volume);
     else if (_sides == 10)
-      player = await cache.play(d10Multiple);
+      player = await cache.play(d10Multiple, volume: volume);
     else if (_sides == 12)
-      player = await cache.play(d12Multiple);
+      player = await cache.play(d12Multiple, volume: volume);
     else
-      player = await cache.play(d20Multiple);
+      player = await cache.play(d20Multiple, volume: volume);
     return player;
   }
 
@@ -129,7 +129,7 @@ class DiceButton extends StatefulWidget {
                   autofocus: true,
                   keyboardType: TextInputType.number,
                   decoration: new InputDecoration(
-                    labelText: 'Custom Roll Sides', hintText: '2'),
+                    labelText: 'Custom Roll Sides'),
                     onChanged: (value) {
                       customRolls.diceDisplays.clear();
                       try {

@@ -114,7 +114,7 @@ class CustomRolls extends ChangeNotifier {
     return temp;
   }
 
-  void doRoll() async {
+  void doRoll(double volume) async {
 
     /* Regexp stuff */
     var counts = regExpCount.allMatches(_currentRoll).map((m) => m[0]).toList();
@@ -191,9 +191,9 @@ class CustomRolls extends ChangeNotifier {
         else
           _button = new DiceButton(sides: key, isCustom: true);
         if (soundMap[key] == 1)
-          audioPlayers.add(await _button.playSound());
+          audioPlayers.add(await _button.playSound(volume));
         else
-          audioPlayers.add(await _button.playMultiple());
+          audioPlayers.add(await _button.playMultiple(volume));
       }
     }
     /* /play sounds */

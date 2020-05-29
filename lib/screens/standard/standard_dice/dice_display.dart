@@ -63,7 +63,7 @@ class _DiceDisplayState extends State<DiceDisplay>
           if (!widget.custom)
             diceRolls.decDie(widget.sides, widget.index, widget.custom, customRolls);
           else {
-            customRolls.doRoll();
+            customRolls.doRoll(diceRolls.volume);
             setState(() {
               diceRolls.allInfoTime.add(Tuple5(
                   customRolls.currentName,

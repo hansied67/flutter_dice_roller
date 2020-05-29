@@ -111,21 +111,22 @@ class _CustomRollerState extends State<CustomRoller> {
                   )
               ),
               Expanded(
-                  child: Container(
-                      child: AutoSizeText(
-                        customRolls.currentName,
-                        style: TextStyle(fontSize: 20.0, color: Colors.cyan),
-                        textAlign: TextAlign.left,
-                        maxLines: 3,
-                      )
-                  )
+                child: Slider(
+                    value: diceRolls.volume,
+                    min: 0.0,
+                    max: 1.0,
+                    label: diceRolls.volume.toString(),
+                    onChanged: (double newValue) {
+                      diceRolls.setVolume(newValue);
+                    }
+                )
               ),
               Expanded(
                   child: Padding(
                       padding: new EdgeInsets.only(right: 8.0),
                       child: Container(
                         child: AutoSizeText(
-                          customRolls.currentResult,
+                          customRolls.currentName + ": " + customRolls.currentResult,
                           style: TextStyle(fontSize: 25.0, color: Colors.cyanAccent),
                           textAlign: TextAlign.right,
                           maxLines: 1,

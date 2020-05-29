@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
           return label == "Characters" ? Center(
             child: Text('$label', style: const TextStyle(fontSize: 36)),
           ) : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               RaisedButton(
                   child: Text('Delete Custom Rolls'),
@@ -72,7 +72,9 @@ class _SettingsScreenState extends State<SettingsScreen> with TickerProviderStat
                       )
                     );
                   }
-              )
+              ),
+              Text("Volume"
+              ),
             ]
           );
         }).toList()
