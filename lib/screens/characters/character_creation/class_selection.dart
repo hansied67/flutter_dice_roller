@@ -34,7 +34,10 @@ class _ClassSelectionState extends State<ClassSelection> {
               child: ListView.builder(
                 itemCount: characterCreation.classInfo.length,
                 itemBuilder: (context, index) {
-                  return characterCreation.classInfo[index];
+                  return Padding(
+                      padding: globalVariables.isMobile ? const EdgeInsets.all(8.0) : const EdgeInsets.all(16.0),
+                      child: characterCreation.classInfo[index]
+                  );
                 },
               )
           )
