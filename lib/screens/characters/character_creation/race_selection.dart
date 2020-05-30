@@ -35,10 +35,7 @@ class _RaceSelectionState extends State<RaceSelection> {
                 child: ListView.builder(
                     itemCount: characterCreation.raceInfo.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: characterCreation.raceInfo[index],
-                      );
+                      return characterCreation.raceInfo[index];
                     },
                 )
             )
