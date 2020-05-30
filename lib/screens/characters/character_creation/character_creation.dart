@@ -10,6 +10,8 @@ class CharacterCreation extends ChangeNotifier {
   bool _didRoll = false;
   String _currentRace = "";
 
+  var _info = List<Text>();
+
   Map<String, dynamic> _statsDict = {
     "Strength": [0, [0, 0, 0, 0], true],
     "Dexterity": [0, [0, 0, 0, 0], true],
@@ -37,12 +39,6 @@ class CharacterCreation extends ChangeNotifier {
     "CHA": 0,
   };
 
-  Map<String, dynamic> _traits = {
-    "size": "",
-  };
-
-  Map<String, dynamic> _startingProficiencies = Map<String, dynamic>();
-
   Map<String, dynamic> _races = {
   "Dragonborn": ["https://www.dnd5eapi.co/api/races/dragonborn", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/6/340/420/618/636272677995471928.png", false],
   "Dwarf": ["https://www.dnd5eapi.co/api/races/dwarf", "https://media-waterdeep.cursecdn.com/avatars/thumbnails/6/254/420/618/636271781394265550.png", false],
@@ -56,6 +52,11 @@ class CharacterCreation extends ChangeNotifier {
   "Custom": ["", "https://png2.cleanpng.com/sh/e46fbec8bdeefdab7cda8fe5a5c4b84c/L0KzQYq3UsA6N6V8hJH0aYP2gLBuTgF2baR5gdH3LX3kgry0gB9ueKZ5feQ2aXPyfsS0kP9zfJJnhNc2bnX3h7F5i71oepJ1RdpubICwg8fuTgBvb15ue9H3LXb1dba0hP94dp10edY2MkG2RX65Tf9vdJpzfZ8AY0XocoO8UBRjQGc3SJC9Mka5QYm4WME2PGo8SKsEMEe7SYq5TwBvbz==/kisspng-question-mark-computer-icons-portable-network-grap-help-svg-png-icon-free-download-2135-2-online-5c5eb253db8620.4266181815497099078992.png", false],
   };
 
+  Map<String, dynamic> _startingProficiencies = Map<String, dynamic>();
+  Map<String, dynamic> _traits = Map<String, dynamic>();
+  Map<String, dynamic> _languages = Map<String, dynamic>();
+  Map<String, dynamic> _descriptors = Map<String, dynamic>();
+
   void setRace(String race) {
     for (var raceTemp in _races.keys) {
       _races[raceTemp][2] = false;
@@ -67,9 +68,7 @@ class CharacterCreation extends ChangeNotifier {
 
   void confirmRace() async {
 
-    for (var bonus in _abilityBonuses.keys) {
-      _abilityBonuses[bonus] = 0;
-    }
+    clearRace();
 
     String url = _races[_currentRace][0];
     print(url);
@@ -83,11 +82,48 @@ class CharacterCreation extends ChangeNotifier {
       for (var proficiency in data['starting_proficiencies']) {
         _startingProficiencies[proficiency['name']] = "https://www.dnd5eapi.co" + proficiency['url'];
       }
-      _traits['size'] = data['size'];
-      print(_abilityBonuses);
-      print(_traits);
-      print(_startingProficiencies);
+      for (var trait in data['traits']) {
+        _traits[trait['name']] = "https://www.dnd5eapi.co" + trait['url'];
+      }
+      for (var language in data['languages']) {
+        _languages[language['name']] = "https://www.dnd5eapi.co" + language['url'];
+      }
+      _descriptors['size'] = data['size'];
+      _descriptors['speed'] = data['speed'];
+      _descriptors['vision'] = data['vision'];
+
+      _info.add(Text(
+        "Name, " + _currentRace
+      ));
+
+      String ability = "Ability Score Increase: ";
+      for (var score in _abilityBonuses.keys) {
+        if (_abilityBonuses[score] != 0) {
+          ability += score + " +" + _abilityBonuses[score].toString() + " ";
+        }
+      }
+      _info.add(Text(ability));
+
+      _info.add(Text("Size: " + _descriptors['size']));
+      _info.add(Text("Speed: " + _descriptors['speed'].toString()));
+
+      String languages = "Languages: ";
+      for (var language in _languages.keys) {
+        languages += language + ", ";
+      }
+      _info.add(Text(languages.substring(0, languages.length-2)));
+
+      String traits = "Traits: ";
+      for (var trait in _traits.keys) {
+        traits += trait + ", ";
+      }
+      if (traits != "Traits: ")
+        _info.add(Text(traits.substring(0, traits.length-2)));
     }
+    else {
+      print("Can't connect");
+    }
+    notifyListeners();
   }
 
   void roll() {
@@ -133,10 +169,43 @@ class CharacterCreation extends ChangeNotifier {
     for (var race in _races.keys) {
       _races[race][2] = false;
     }
+
+    for (var bonus in _abilityBonuses.keys) {
+      _abilityBonuses[bonus] = 0;
+    }
+
+    _descriptors.clear();
+    _traits.clear();
+    _languages.clear();
+    _startingProficiencies.clear();
+    _currentRace = "";
+    _info.clear();
+    notifyListeners();
+  }
+
+  void clearRace() {
+    for (var bonus in _abilityBonuses.keys) {
+      _abilityBonuses[bonus] = 0;
+    }
+
+    _descriptors.clear();
+    _traits.clear();
+    _languages.clear();
+    _startingProficiencies.clear();
+    _info.clear();
+    notifyListeners();
   }
 
   Map<String, dynamic> get statsDict => _statsDict;
   Map<String, dynamic> get races => _races;
   bool get didRoll => _didRoll;
   String get currentRace => _currentRace;
+
+  Map<String, dynamic> get abilityBonuses => _abilityBonuses;
+  Map<String, dynamic> get descriptors => _descriptors;
+  Map<String, dynamic> get traits => _traits;
+  Map<String, dynamic> get languages => _languages;
+  Map<String, dynamic> get startingProficiencies => _startingProficiencies;
+
+  List<Text> get info => _info;
 }

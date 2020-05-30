@@ -79,8 +79,8 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                         onPressed: () {
                           if (_page != 1) {
                             if (_page == 0 && _pages[_page].isSelected) {
-                              if (characterCreation.currentRace != "Custom")
-                                characterCreation.confirmRace();
+                              //if (characterCreation.currentRace != "Custom")
+                                //characterCreation.confirmRace();
                               setState(() {
                                 _page += 1;
                               });
