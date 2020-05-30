@@ -91,7 +91,7 @@ class CharacterCreation extends ChangeNotifier {
     notifyListeners();
   }
 
-  void confirmRace() async {
+  void confirmRace(var globalVariables) async {
 
     clearRace();
 
@@ -124,8 +124,10 @@ class CharacterCreation extends ChangeNotifier {
       _raceInfo.add(RichText(
         text: new TextSpan(
           children: <TextSpan> [
-            new TextSpan(text: "Name, ", style: new TextStyle(fontWeight: FontWeight.bold)),
-            new TextSpan(text: _currentRace),
+            new TextSpan(text: (_currentRace), style: new TextStyle(
+                fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                color: Colors.cyan, fontWeight: FontWeight.bold
+            )),
             ]
         )
       ));
@@ -139,8 +141,14 @@ class CharacterCreation extends ChangeNotifier {
       _raceInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Ability Score Increase: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: ability),
+                new TextSpan(text: "Ability Score Increase: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: ability, style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));
@@ -148,16 +156,28 @@ class CharacterCreation extends ChangeNotifier {
       _raceInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Size: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: _descriptors['size']),
+                new TextSpan(text: "Size: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: _descriptors['size'], style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));
       _raceInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Speed: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: _descriptors['speed'].toString()),
+                new TextSpan(text: "Speed: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: _descriptors['speed'].toString(), style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));
@@ -169,10 +189,19 @@ class CharacterCreation extends ChangeNotifier {
       _raceInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Languages: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: "Languages: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
                 _currentRace != "Human" ?
-                  new TextSpan(text: languages.substring(0, languages.length-2)) :
-                  new TextSpan(text: "Common and one language of choice"),
+                  new TextSpan(text: languages.substring(0, languages.length-2), style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.white
+                  )):
+                  new TextSpan(text: "Common and one language of choice", style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.white
+                  )),
               ]
           )
       ));
@@ -185,8 +214,14 @@ class CharacterCreation extends ChangeNotifier {
         _raceInfo.add(RichText(
             text: new TextSpan(
                 children: <TextSpan> [
-                  new TextSpan(text: "Traits: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                  new TextSpan(text: traits.substring(0, traits.length-2)),
+                  new TextSpan(text: "Traits: ", style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.cyan, fontWeight: FontWeight.bold
+                  )),
+                  new TextSpan(text: traits.substring(0, traits.length-2), style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.white
+                  )),
                 ]
             )
         ));
@@ -194,8 +229,14 @@ class CharacterCreation extends ChangeNotifier {
         _raceInfo.add(RichText(
             text: new TextSpan(
                 children: <TextSpan> [
-                  new TextSpan(text: "Traits: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                  new TextSpan(text: "0"),
+                  new TextSpan(text: "Traits: ", style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.cyan, fontWeight: FontWeight.bold
+                  )),
+                  new TextSpan(text: "0", style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.white
+                  )),
                 ]
             )
         ));
@@ -208,7 +249,7 @@ class CharacterCreation extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setClass(String _class) async {
+  void setClass(String _class, var globalVariables) async {
 
     clearClass();
 
@@ -253,8 +294,25 @@ class CharacterCreation extends ChangeNotifier {
       _classInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text:_currentClass + ", Hit Die: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: _hitDie.toString()),
+                new TextSpan(text:_currentClass, style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                ))
+              ]
+          )
+      ));
+
+      _classInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Hit Die: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: _hitDie.toString(), style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));
@@ -266,8 +324,14 @@ class CharacterCreation extends ChangeNotifier {
       _classInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Proficiencies: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: proficiencies.substring(0, proficiencies.length-2)),
+                new TextSpan(text: "Proficiencies: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: proficiencies.substring(0, proficiencies.length-2), style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));
@@ -282,10 +346,19 @@ class CharacterCreation extends ChangeNotifier {
       _classInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Tools: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: "Tools: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
                 tools != "" ?
-                  new TextSpan(text: tools.substring(0, tools.length-2)) :
-                  new TextSpan(text: "0"),
+                  new TextSpan(text: tools.substring(0, tools.length-2), style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.white
+                  )) :
+                  new TextSpan(text: "0", style: new TextStyle(
+                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      color: Colors.white
+                  )),
               ]
           )
       ));
@@ -297,8 +370,14 @@ class CharacterCreation extends ChangeNotifier {
       _classInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Saving Throws: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: savingThrows.substring(0, savingThrows.length-2)),
+                new TextSpan(text: "Saving Throws: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: savingThrows.substring(0, savingThrows.length-2), style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));
@@ -313,8 +392,14 @@ class CharacterCreation extends ChangeNotifier {
       _classInfo.add(RichText(
           text: new TextSpan(
               children: <TextSpan> [
-                new TextSpan(text: "Skills: ", style: new TextStyle(fontWeight: FontWeight.bold)),
-                new TextSpan(text: skills.substring(0, skills.length-2)),
+                new TextSpan(text: "Skills: ", style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.cyan, fontWeight: FontWeight.bold
+                )),
+                new TextSpan(text: skills.substring(0, skills.length-2), style: new TextStyle(
+                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    color: Colors.white
+                )),
               ]
           )
       ));

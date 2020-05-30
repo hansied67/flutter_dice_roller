@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/global_widgets/auto_text.dart';
 import 'package:provider/provider.dart';
 
+import '../../../global_variables.dart';
 import 'character_creation.dart';
 
 class ClassSelection extends StatefulWidget {
@@ -22,6 +23,7 @@ class _ClassSelectionState extends State<ClassSelection> {
   @override
   Widget build(BuildContext context) {
     final characterCreation = Provider.of<CharacterCreation>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
     return Column(
       children: [
         widget._isSelectedTotal ?
@@ -54,7 +56,7 @@ class _ClassSelectionState extends State<ClassSelection> {
                   color: !characterCreation.classes.values.elementAt(index)[2] ? ThemeData.dark().cardColor : ThemeData.dark().buttonColor,
                   child: InkWell(
                     onTap: () {
-                      characterCreation.setClass(characterCreation.classes.keys.elementAt(index));
+                      characterCreation.setClass(characterCreation.classes.keys.elementAt(index), globalVariables);
                       setState(() {
                         widget._isSelectedTotal = true;
                       });

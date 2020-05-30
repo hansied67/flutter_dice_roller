@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterdiceroller/global_widgets/auto_text.dart';
 import 'package:provider/provider.dart';
 
+import '../../../global_variables.dart';
 import 'character_creation.dart';
 
 class RaceSelection extends StatefulWidget {
@@ -23,6 +24,7 @@ class _RaceSelectionState extends State<RaceSelection> {
   @override
   Widget build(BuildContext context) {
     final characterCreation = Provider.of<CharacterCreation>(context);
+    final globalVariables = Provider.of<GlobalVariables>(context);
     return Column(
         children: [
           widget._isSelectedTotal ?
@@ -54,7 +56,7 @@ class _RaceSelectionState extends State<RaceSelection> {
                     child: InkWell(
                         onTap: () {
                           characterCreation.setRace(characterCreation.races.keys.elementAt(index));
-                          characterCreation.confirmRace();
+                          characterCreation.confirmRace(globalVariables);
                           setState(() {
                             widget._isSelectedTotal = true;
                           });
