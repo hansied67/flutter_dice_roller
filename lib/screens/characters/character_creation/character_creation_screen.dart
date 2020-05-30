@@ -3,6 +3,7 @@ import 'package:flutterdiceroller/screens/characters/character_creation/race_sel
 import 'package:provider/provider.dart';
 
 import '../../../global_variables.dart';
+import 'class_selection.dart';
 import 'custom_form.dart';
 import 'character_creation.dart';
 
@@ -23,7 +24,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   @override void initState() {
     super.initState();
     _controller = PageController(initialPage: _page);
-    _pages = [RaceSelection(controller: _controller), CustomForm(controller: _controller)];
+    _pages = [RaceSelection(controller: _controller), ClassSelection(controller: _controller), CustomForm(controller: _controller)];
   }
 
   @override void dispose() {
@@ -75,12 +76,10 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: FloatingActionButton(
                         heroTag: "next",
-                        backgroundColor: _page == 1 ? Colors.grey : Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                        backgroundColor: ((_page == 0 || _page == 1) && _pages[_page].isSelected) ? Theme.of(context).floatingActionButtonTheme.backgroundColor: Colors.grey,
                         onPressed: () {
-                          if (_page != 1) {
-                            if (_page == 0 && _pages[_page].isSelected) {
-                              //if (characterCreation.currentRace != "Custom")
-                                //characterCreation.confirmRace();
+                          if (_page != 2) {
+                            if ((_page == 0 || _page == 1) && _pages[_page].isSelected) {
                               setState(() {
                                 _page += 1;
                               });

@@ -25,21 +25,22 @@ class _RaceSelectionState extends State<RaceSelection> {
     final characterCreation = Provider.of<CharacterCreation>(context);
     return Column(
         children: [
+          widget._isSelectedTotal ?
           Expanded(
             flex: 2,
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
-                    itemCount: characterCreation.info.length,
+                    itemCount: characterCreation.raceInfo.length,
                     itemBuilder: (context, index) {
                       return Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: characterCreation.info[index],
+                          child: characterCreation.raceInfo[index],
                       );
                     },
                 )
             )
-          ),
+          ) : Container(),
           Expanded(flex: 2, child: GridView.builder(
           itemCount: characterCreation.races.length,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

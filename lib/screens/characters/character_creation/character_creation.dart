@@ -9,8 +9,11 @@ class CharacterCreation extends ChangeNotifier {
 
   bool _didRoll = false;
   String _currentRace = "";
+  String _currentClass = "";
+  int _hitDie = 0;
 
-  var _info = List<Text>();
+  var _raceInfo = List<Widget>();
+  var _classInfo = List<Widget>();
 
   Map<String, dynamic> _statsDict = {
     "Strength": [0, [0, 0, 0, 0], true],
@@ -52,10 +55,32 @@ class CharacterCreation extends ChangeNotifier {
   "Custom": ["", "https://png2.cleanpng.com/sh/e46fbec8bdeefdab7cda8fe5a5c4b84c/L0KzQYq3UsA6N6V8hJH0aYP2gLBuTgF2baR5gdH3LX3kgry0gB9ueKZ5feQ2aXPyfsS0kP9zfJJnhNc2bnX3h7F5i71oepJ1RdpubICwg8fuTgBvb15ue9H3LXb1dba0hP94dp10edY2MkG2RX65Tf9vdJpzfZ8AY0XocoO8UBRjQGc3SJC9Mka5QYm4WME2PGo8SKsEMEe7SYq5TwBvbz==/kisspng-question-mark-computer-icons-portable-network-grap-help-svg-png-icon-free-download-2135-2-online-5c5eb253db8620.4266181815497099078992.png", false],
   };
 
+  Map<String, dynamic> _classes = {
+    "Barbarian": ["https://www.dnd5eapi.co/api/classes/barbarian", "https://www.aidedd.org/dnd-builder/images/class_barbare.png", false],
+    "Bard": ["https://www.dnd5eapi.co/api/classes/bard", "https://www.aidedd.org/dnd-builder/images/class_barde.png", false],
+    "Cleric": ["https://www.dnd5eapi.co/api/classes/cleric", "https://www.aidedd.org/dnd-builder/images/class_pretre.png", false],
+    "Druid": ["https://www.dnd5eapi.co/api/classes/druid", "https://www.aidedd.org/dnd-builder/images/class_druide.png", false],
+    "Fighter": ["https://www.dnd5eapi.co/api/classes/fighter", "https://www.aidedd.org/dnd-builder/images/class_guerrier.png", false],
+    "Monk": ["https://www.dnd5eapi.co/api/classes/monk", "https://www.aidedd.org/dnd-builder/images/class_moine.png", false],
+    "Paladin": ["https://www.dnd5eapi.co/api/classes/paladin", "https://www.aidedd.org/dnd-builder/images/class_paladin.png", false],
+    "Ranger": ["https://www.dnd5eapi.co/api/classes/ranger", "https://www.aidedd.org/dnd-builder/images/class_rodeur.png", false],
+    "Rogue": ["https://www.dnd5eapi.co/api/classes/rogue", "https://www.aidedd.org/dnd-builder/images/class_roublard.png", false],
+    "Sorcerer": ["https://www.dnd5eapi.co/api/classes/sorcerer", "https://www.aidedd.org/dnd-builder/images/class_ensorceleur.png", false],
+    "Warlock": ["https://www.dnd5eapi.co/api/classes/warlock", "https://www.aidedd.org/dnd-builder/images/class_sorcier.png", false],
+    "Wizard": ["https://www.dnd5eapi.co/api/classes/wizard", "https://www.aidedd.org/dnd-builder/images/class_magicien.png", false],
+    "Custom": ["", "https://png2.cleanpng.com/sh/e46fbec8bdeefdab7cda8fe5a5c4b84c/L0KzQYq3UsA6N6V8hJH0aYP2gLBuTgF2baR5gdH3LX3kgry0gB9ueKZ5feQ2aXPyfsS0kP9zfJJnhNc2bnX3h7F5i71oepJ1RdpubICwg8fuTgBvb15ue9H3LXb1dba0hP94dp10edY2MkG2RX65Tf9vdJpzfZ8AY0XocoO8UBRjQGc3SJC9Mka5QYm4WME2PGo8SKsEMEe7SYq5TwBvbz==/kisspng-question-mark-computer-icons-portable-network-grap-help-svg-png-icon-free-download-2135-2-online-5c5eb253db8620.4266181815497099078992.png", false],
+  };
+
   Map<String, dynamic> _startingProficiencies = Map<String, dynamic>();
   Map<String, dynamic> _traits = Map<String, dynamic>();
   Map<String, dynamic> _languages = Map<String, dynamic>();
   Map<String, dynamic> _descriptors = Map<String, dynamic>();
+  Map<String, dynamic> _proficiencies = Map<String, dynamic>();
+  int _toolsCount = 0;
+  Map<String, dynamic> _tools = Map<String, dynamic>();
+  Map<String, dynamic> _savingThrows = Map<String, dynamic>();
+  int _skillsCount = 0;
+  Map<String, dynamic> _skills = Map<String, dynamic>();
 
   void setRace(String race) {
     for (var raceTemp in _races.keys) {
@@ -72,8 +97,12 @@ class CharacterCreation extends ChangeNotifier {
 
     String url = _races[_currentRace][0];
     print(url);
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
+    var response;
+    if (_currentRace != "Custom")
+      response = await http.get(url);
+    else
+      response = await http.get('https://www.google.com');
+    if (response.statusCode == 200 && _currentRace != "Custom") {
       String jsonString = response.body;
       var data = json.decode(jsonString);
       for (var bonus in data['ability_bonuses']) {
@@ -92,36 +121,203 @@ class CharacterCreation extends ChangeNotifier {
       _descriptors['speed'] = data['speed'];
       _descriptors['vision'] = data['vision'];
 
-      _info.add(Text(
-        "Name, " + _currentRace
+      _raceInfo.add(RichText(
+        text: new TextSpan(
+          children: <TextSpan> [
+            new TextSpan(text: "Name, ", style: new TextStyle(fontWeight: FontWeight.bold)),
+            new TextSpan(text: _currentRace),
+            ]
+        )
       ));
 
-      String ability = "Ability Score Increase: ";
+      String ability = "";
       for (var score in _abilityBonuses.keys) {
         if (_abilityBonuses[score] != 0) {
           ability += score + " +" + _abilityBonuses[score].toString() + " ";
         }
       }
-      _info.add(Text(ability));
+      _raceInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Ability Score Increase: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: ability),
+              ]
+          )
+      ));
 
-      _info.add(Text("Size: " + _descriptors['size']));
-      _info.add(Text("Speed: " + _descriptors['speed'].toString()));
+      _raceInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Size: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: _descriptors['size']),
+              ]
+          )
+      ));
+      _raceInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Speed: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: _descriptors['speed'].toString()),
+              ]
+          )
+      ));
 
-      String languages = "Languages: ";
+      String languages = "";
       for (var language in _languages.keys) {
         languages += language + ", ";
       }
-      _info.add(Text(languages.substring(0, languages.length-2)));
+      _raceInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Languages: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                _currentRace != "Human" ?
+                  new TextSpan(text: languages.substring(0, languages.length-2)) :
+                  new TextSpan(text: "Common and one language of choice"),
+              ]
+          )
+      ));
 
-      String traits = "Traits: ";
+      String traits = "";
       for (var trait in _traits.keys) {
         traits += trait + ", ";
       }
-      if (traits != "Traits: ")
-        _info.add(Text(traits.substring(0, traits.length-2)));
+      if (traits != "")
+        _raceInfo.add(RichText(
+            text: new TextSpan(
+                children: <TextSpan> [
+                  new TextSpan(text: "Traits: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                  new TextSpan(text: traits.substring(0, traits.length-2)),
+                ]
+            )
+        ));
+      else {
+        _raceInfo.add(RichText(
+            text: new TextSpan(
+                children: <TextSpan> [
+                  new TextSpan(text: "Traits: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                  new TextSpan(text: "0"),
+                ]
+            )
+        ));
+      }
+
     }
     else {
       print("Can't connect");
+    }
+    notifyListeners();
+  }
+
+  void setClass(String _class) async {
+
+    clearClass();
+
+    _currentClass = _class;
+    _classes[_class][2] = true;
+
+    var url = _classes[_currentClass][0];
+    print(url);
+    var response;
+    if (_currentClass != "Custom")
+      response = await http.get(url);
+    else
+      response = await http.get('https://www.google.com');
+    if (response.statusCode == 200 && _currentClass != "Custom") {
+      String jsonString = response.body;
+      var data = json.decode(jsonString);
+      _hitDie = data['hit_die'];
+
+      for (var proficiency in data['proficiencies']) {
+        _proficiencies[proficiency['name']] = "https://www.dnd5eapi.co" + proficiency['url'];
+      }
+
+      try {
+        if (data['proficiency_choices'][1] != null) {
+          _toolsCount = data['proficiency_choices'][1]['choose'];
+          for (var tool in data['proficiency_choices'][1]['from']) {
+            _tools[tool['name']] = "https://www.dnd5eapi.co" + tool['url'];
+          }
+        }
+      } catch(e) {
+      }
+
+      for (var savingThrow in data['saving_throws']) {
+        _savingThrows[savingThrow['name']] = "https://www.dnd5eapi.co" + savingThrow['url'];
+      }
+
+      for (var skillChoice in data['proficiency_choices'][0]['from']) {
+        _skills[skillChoice['name']] = "https://www.dnd5eapi.co" + skillChoice['url'];
+      }
+      _skillsCount = data['proficiency_choices'][0]['choose'];
+
+      _classInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text:_currentClass + ", Hit Die: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: _hitDie.toString()),
+              ]
+          )
+      ));
+
+      String proficiencies = "";
+      for (var proficiency in _proficiencies.keys) {
+        proficiencies += proficiency + ", ";
+      }
+      _classInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Proficiencies: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: proficiencies.substring(0, proficiencies.length-2)),
+              ]
+          )
+      ));
+
+      String tools = "";
+      if (_tools.isNotEmpty) {
+        tools += _toolsCount.toString() + " from ";
+      }
+      for (var tool in _tools.keys) {
+        tools += tool + ", ";
+      }
+      _classInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Tools: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                tools != "" ?
+                  new TextSpan(text: tools.substring(0, tools.length-2)) :
+                  new TextSpan(text: "0"),
+              ]
+          )
+      ));
+
+      String savingThrows = "";
+      for (var savingThrow in _savingThrows.keys) {
+        savingThrows += savingThrow + ", ";
+      }
+      _classInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Saving Throws: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: savingThrows.substring(0, savingThrows.length-2)),
+              ]
+          )
+      ));
+
+      String skills = _skillsCount.toString() + " from ";
+      for (var skill in _skills.keys) {
+        if (skill.substring(0, 7) != "Skill: ")
+          skills += skill + ", ";
+        else
+          skills += skill.substring(7, skill.length) + ", ";
+      }
+      _classInfo.add(RichText(
+          text: new TextSpan(
+              children: <TextSpan> [
+                new TextSpan(text: "Skills: ", style: new TextStyle(fontWeight: FontWeight.bold)),
+                new TextSpan(text: skills.substring(0, skills.length-2)),
+              ]
+          )
+      ));
     }
     notifyListeners();
   }
@@ -170,6 +366,10 @@ class CharacterCreation extends ChangeNotifier {
       _races[race][2] = false;
     }
 
+    for (var _class in _classes.keys) {
+      _classes[_class][2] = false;
+    }
+
     for (var bonus in _abilityBonuses.keys) {
       _abilityBonuses[bonus] = 0;
     }
@@ -179,7 +379,20 @@ class CharacterCreation extends ChangeNotifier {
     _languages.clear();
     _startingProficiencies.clear();
     _currentRace = "";
-    _info.clear();
+    _currentClass = "";
+    _raceInfo.clear();
+
+    for (var _classTemp in _classes.keys) {
+      _classes[_classTemp][2] = false;
+    }
+    _classInfo.clear();
+    _proficiencies.clear();
+    _tools.clear();
+    _toolsCount = 0;
+    _savingThrows.clear();
+    _skills.clear();
+    _skillsCount = 0;
+    _currentClass = "";
     notifyListeners();
   }
 
@@ -192,8 +405,22 @@ class CharacterCreation extends ChangeNotifier {
     _traits.clear();
     _languages.clear();
     _startingProficiencies.clear();
-    _info.clear();
+    _raceInfo.clear();
     notifyListeners();
+  }
+
+  void clearClass() {
+    for (var _classTemp in _classes.keys) {
+      _classes[_classTemp][2] = false;
+    }
+    _classInfo.clear();
+    _proficiencies.clear();
+    _tools.clear();
+    _toolsCount = 0;
+    _savingThrows.clear();
+    _skills.clear();
+    _skillsCount = 0;
+    _currentClass = "";
   }
 
   Map<String, dynamic> get statsDict => _statsDict;
@@ -206,6 +433,8 @@ class CharacterCreation extends ChangeNotifier {
   Map<String, dynamic> get traits => _traits;
   Map<String, dynamic> get languages => _languages;
   Map<String, dynamic> get startingProficiencies => _startingProficiencies;
+  Map<String, dynamic> get classes => _classes;
 
-  List<Text> get info => _info;
+  List<Widget> get raceInfo => _raceInfo;
+  List<Widget> get classInfo => _classInfo;
 }
