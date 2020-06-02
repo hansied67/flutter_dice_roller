@@ -11,10 +11,33 @@ class CharacterCreation extends ChangeNotifier {
   bool _didRoll = false;
   String _currentRace = "";
   String _currentClass = "";
+  String _currentName = "";
   int _hitDie = 0;
 
   var _raceInfo = List<Widget>();
   var _classInfo = List<Widget>();
+
+  var _stats = new List<int>();
+
+  var _pageSelection = [false, false, false];
+  void setPage(int index, bool value) {
+    _pageSelection[index] = value;
+    notifyListeners();
+  }
+  List<bool> get pageSelection => _pageSelection;
+
+  Map<String, dynamic> _statSelection = {
+    "Strength": -1,
+    "Dexterity": -1,
+    "Constitution": -1,
+    "Intelligence": -1,
+    "Wisdom": -1,
+    "Charisma": -1,
+  };
+
+  void selectStat(String stat, int index) { _statSelection[stat] = index; notifyListeners(); }
+  void resetStat(String stat, int index) { _statSelection[stat] = -1; notifyListeners(); }
+  Map<String, dynamic> get statSelection => _statSelection;
 
   Map<String, dynamic> _statsDict = {
     "Strength": [0, [0, 0, 0, 0], true],
@@ -126,7 +149,7 @@ class CharacterCreation extends ChangeNotifier {
         text: new TextSpan(
           children: <TextSpan> [
             new TextSpan(text: (_currentRace), style: new TextStyle(
-                fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                 color: Colors.cyan, fontWeight: FontWeight.bold
             )),
             ]
@@ -143,11 +166,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Ability Score Increase: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: ability, style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -158,11 +181,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Size: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: _descriptors['size'], style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -172,11 +195,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Speed: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: _descriptors['speed'].toString(), style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -191,16 +214,16 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Languages: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 _currentRace != "Human" ?
                   new TextSpan(text: languages.substring(0, languages.length-2), style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.white
                   )):
                   new TextSpan(text: "Common and one language of choice", style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.white
                   )),
               ]
@@ -216,11 +239,11 @@ class CharacterCreation extends ChangeNotifier {
             new TextSpan(
                 children: <TextSpan> [
                   new TextSpan(text: "Traits: ", style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.cyan, fontWeight: FontWeight.bold
                   )),
                   new TextSpan(text: traits.substring(0, traits.length-2), style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.white
                   )),
                 ]
@@ -231,11 +254,11 @@ class CharacterCreation extends ChangeNotifier {
             new TextSpan(
                 children: <TextSpan> [
                   new TextSpan(text: "Traits: ", style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.cyan, fontWeight: FontWeight.bold
                   )),
                   new TextSpan(text: "0", style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.white
                   )),
                 ]
@@ -296,7 +319,7 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text:_currentClass, style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 ))
               ]
@@ -307,11 +330,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Hit Die: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: _hitDie.toString(), style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -326,11 +349,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Proficiencies: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: proficiencies.substring(0, proficiencies.length-2), style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -348,16 +371,16 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Tools: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 tools != "" ?
                   new TextSpan(text: tools.substring(0, tools.length-2), style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.white
                   )) :
                   new TextSpan(text: "0", style: new TextStyle(
-                      fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                      fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                       color: Colors.white
                   )),
               ]
@@ -372,11 +395,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Saving Throws: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: savingThrows.substring(0, savingThrows.length-2), style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -394,11 +417,11 @@ class CharacterCreation extends ChangeNotifier {
           new TextSpan(
               children: <TextSpan> [
                 new TextSpan(text: "Skills: ", style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.cyan, fontWeight: FontWeight.bold
                 )),
                 new TextSpan(text: skills.substring(0, skills.length-2), style: new TextStyle(
-                    fontSize: globalVariables.isMobile ? 15.0 : 25.0,
+                    fontSize: globalVariables.isMobile ? 15.0 : 17.5,
                     color: Colors.white
                 )),
               ]
@@ -419,24 +442,33 @@ class CharacterCreation extends ChangeNotifier {
       _statsDict[key][0] = rolls.reduce((a, b) => a + b) - minimum;
       _statsDict[key][2] = false;
     }
-    notifyListeners();
-  }
 
-  void reRoll(String stat) {
-    List<int> rolls = _statsDict[stat][1];
-    for (int i = 0; i < _statsDict[stat][1].length; i++) {
-      rolls[i] = rng.nextInt(6) + 1;
+    var list = _statsDict.values.toList();
+    list.sort((a, b) => b[0].compareTo(a[0]));
+
+    for (int i=0; i<_statsDict.keys.length; i++) {
+      _statsDict[_statsDict.keys.elementAt(i)] = list[i];
     }
-    rolls.sort((b, a) => a.compareTo(b));
-    int minimum = rolls.reduce(min);
-    _statsDict[stat][0] = rolls.reduce((a, b) => a + b) - minimum;
-    _statsDict[stat][2] = true;
+
+    list.sort((a, b) => a[0].compareTo(b[0]));
+
+    _stats.clear();
+    for (var stat in list) {
+      _stats.add(stat[0]);
+    }
+
+    print(_stats);
+
     notifyListeners();
   }
 
   void inputStat(String stat, int value) {
     _statsManual[stat] = value;
     print(_statsManual);
+  }
+
+  void setName(String name) {
+    _currentName = name;
   }
 
   void clear() {
@@ -446,6 +478,11 @@ class CharacterCreation extends ChangeNotifier {
       _statsDict[key][2] = true;
       _didRoll = false;
       _statsManual[key] = 0;
+      _statSelection[key] = -1;
+    }
+
+    for (var selection in _pageSelection) {
+      selection = false;
     }
 
     for (var race in _races.keys) {
@@ -466,6 +503,7 @@ class CharacterCreation extends ChangeNotifier {
     _startingProficiencies.clear();
     _currentRace = "";
     _currentClass = "";
+    _currentName = "";
     _raceInfo.clear();
 
     for (var _classTemp in _classes.keys) {
@@ -509,6 +547,8 @@ class CharacterCreation extends ChangeNotifier {
     _currentClass = "";
   }
 
+
+
   Map<String, dynamic> get statsDict => _statsDict;
   Map<String, dynamic> get races => _races;
   bool get didRoll => _didRoll;
@@ -523,4 +563,5 @@ class CharacterCreation extends ChangeNotifier {
 
   List<Widget> get raceInfo => _raceInfo;
   List<Widget> get classInfo => _classInfo;
+  List<int> get stats => _stats;
 }

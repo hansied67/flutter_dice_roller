@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterdiceroller/screens/characters/character_creation/stat_choice.dart';
 import 'package:flutterdiceroller/screens/characters/character_creation/stat_roll_display.dart';
 import 'package:provider/provider.dart';
 
 import 'character_creation.dart';
 
 class CustomForm extends StatefulWidget {
-  CustomForm({Key key, PageController controller}) : super(key: key);
+  CustomForm({Key key, this.controller}) : super(key: key);
+
+  final formKey = GlobalKey<FormState>();
+
+  bool _isSelected = false;
+  final controller;
+
+  void setSelected(bool selection) {
+    _isSelected = selection;
+  }
+
+  bool get isSelected => _isSelected;
+  GlobalKey<FormState> get getController => formKey;
 
   @override
   _CustomFormState createState() => _CustomFormState();
@@ -14,7 +27,6 @@ class CustomForm extends StatefulWidget {
 
 class _CustomFormState extends State<CustomForm> {
 
-  final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _class = TextEditingController();
 
@@ -23,28 +35,16 @@ class _CustomFormState extends State<CustomForm> {
   final _nodes = [FocusNode(), FocusNode(), FocusNode(), FocusNode(), FocusNode()];
 
   List<Widget> _stats = new List<Widget>();
+  List<Widget> _statsChoice = new List<Widget>();
   String _statChoice = "Roll New Stats";
-  bool didRoll;
 
   void getStats(BuildContext context, var characterCreation) {
     _stats.clear();
+    _statsChoice.clear();
     for (var stat in characterCreation.statsDict.keys) {
-      _stats.add(StatRollDisplay(stat: stat));
+      _stats.add(StatRollDisplay(key: ValueKey(stat), stat: stat));
+      _statsChoice.add(StatChoice(stat: stat, parent: widget));
     }
-    if (!characterCreation.didRoll)
-      _stats.add(Row(mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FlatButton(color: Theme.of(context).buttonColor,
-              child: Text("Roll"),
-              onPressed: () {
-                for (var stat in _stats) {
-                  if (stat is StatRollDisplay)
-                    characterCreation.roll();
-                }
-              }
-          )
-        ]
-    ));
   }
 
   @override void didChangeDependencies() {
@@ -75,58 +75,24 @@ class _CustomFormState extends State<CustomForm> {
   @override
   Widget build(BuildContext context) {
     final characterCreation = Provider.of<CharacterCreation>(context);
-    return Form(
-      key: _formKey,
+
+    return SingleChildScrollView(child: Padding(padding: const EdgeInsets.all(8.0), child: Form(
+      key: widget.formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(
-            textAlign: TextAlign.center,
-            maxLength: 50,
-            controller: _name,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: 'Name',
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return "You must input a name.";
-              }
-              return null;
-            },
-            onFieldSubmitted: (text) {
-              if (_formKey.currentState.validate()) {
-                print("name");
-              }
-            }
-          ),
-          TextFormField(
-            textAlign: TextAlign.center,
-            maxLength: 30,
-            controller: _class,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: 'Class',
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return "You must input a class.";
-              }
-              return null;
-            },
-            onFieldSubmitted: (text) {
-              if (_formKey.currentState.validate()) {
-                print("class");
-              }
-            }
-          ),
           RadioListTile(
             title: Text("Roll New Stats"),
             value: "Roll New Stats",
             groupValue: _statChoice,
             onChanged: (value) {
-              setState(() {
-                _statChoice = value;
-              });
+              _statChoice = value;
+              characterCreation.setPage(2, false);
+              final selections = new Map.from(characterCreation.statSelection).values.toList().toSet();
+              selections.removeWhere((item) => item == -1);
+              if (selections.length == characterCreation.statSelection.length) {
+                characterCreation.setPage(2, true);
+              }
             }
           ),
           RadioListTile(
@@ -134,16 +100,16 @@ class _CustomFormState extends State<CustomForm> {
             value: "Manual Stats Entry",
             groupValue: _statChoice,
             onChanged: (value) {
-              setState(() {
+              this.setState(() {
                 _statChoice = value;
+                characterCreation.setPage(2, true);
               });
             }
           ),
           _statChoice == "Roll New Stats" ? Column(
-            children: [
-
-            ]
-          ) : Column(
+            children: _stats + _statsChoice + [Container(height: 75)]
+          )
+            : Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
@@ -178,7 +144,6 @@ class _CustomFormState extends State<CustomForm> {
                       },
                     )
                   )),
-                  Expanded(flex: 2, child: Container()),
                 ]
               ),
               Row(
@@ -214,7 +179,6 @@ class _CustomFormState extends State<CustomForm> {
                           },
                         )
                     )),
-                    Expanded(flex: 2, child: Container()),
                   ]
               ),
               Row(
@@ -250,7 +214,6 @@ class _CustomFormState extends State<CustomForm> {
                           },
                         )
                     )),
-                    Expanded(flex: 2, child: Container()),
                   ]
               ),
               Row(
@@ -286,7 +249,6 @@ class _CustomFormState extends State<CustomForm> {
                           },
                         )
                     )),
-                    Expanded(flex: 2, child: Container()),
                   ]
               ),
               Row(
@@ -322,7 +284,6 @@ class _CustomFormState extends State<CustomForm> {
                           },
                         )
                     )),
-                    Expanded(flex: 2, child: Container()),
                   ]
               ),
               Row(
@@ -354,7 +315,7 @@ class _CustomFormState extends State<CustomForm> {
                             return null;
                           },
                           onFieldSubmitted: (value) {
-                            if (_formKey.currentState.validate()) {
+                            if (widget.formKey.currentState.validate()) {
                               var temp = [0, 0, 0, 0, 0, 0];
                               for (int i=0; i<_controllers.length; i++) {
                                 temp[i] = int.parse(_controllers[i].text);
@@ -364,13 +325,12 @@ class _CustomFormState extends State<CustomForm> {
                           },
                         )
                     )),
-                    Expanded(flex: 2, child: Container()),
                   ]
               ),
             ]
           )
         ]
       )
-    );
+    )));
   }
 }

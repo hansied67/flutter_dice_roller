@@ -26,7 +26,7 @@ class _ClassSelectionState extends State<ClassSelection> {
     final globalVariables = Provider.of<GlobalVariables>(context);
     return Column(
       children: [
-        widget._isSelectedTotal ?
+        characterCreation.pageSelection[1] ?
         Expanded(
           flex: 2,
           child: Padding(
@@ -36,7 +36,7 @@ class _ClassSelectionState extends State<ClassSelection> {
                 itemBuilder: (context, index) {
                   return Padding(
                       padding: globalVariables.isMobile ? const EdgeInsets.all(8.0) : const EdgeInsets.all(16.0),
-                      child: characterCreation.classInfo[index]
+                      child: Container(child: characterCreation.classInfo[index])
                   );
                 },
               )
@@ -58,7 +58,7 @@ class _ClassSelectionState extends State<ClassSelection> {
                     onTap: () {
                       characterCreation.setClass(characterCreation.classes.keys.elementAt(index), globalVariables);
                       setState(() {
-                        widget._isSelectedTotal = true;
+                        characterCreation.setPage(1, true);
                       });
                     },
                     child: Stack(

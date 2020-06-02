@@ -7,8 +7,9 @@ import 'package:flutterdiceroller/global_widgets/auto_text.dart';
 import 'character_creation.dart';
 
 class StatRollDisplay extends StatefulWidget {
-  StatRollDisplay({Key key, this.stat}) : super(key: key);
+  StatRollDisplay({this.key, this.stat}) : super(key: key);
 
+  final Key key;
   final String stat;
 
   @override
@@ -93,14 +94,11 @@ class _StatRollDisplayState extends State<StatRollDisplay> {
   Widget build(BuildContext context) {
     final characterCreation = Provider.of<CharacterCreation>(context);
     return Row(
+      key: widget.key,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
           flex: 2,
-          child: Text(widget.stat),
-        ),
-        Expanded(
-          flex: 4,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: _diceDisplays,
@@ -110,17 +108,6 @@ class _StatRollDisplayState extends State<StatRollDisplay> {
           flex: 1,
           child: Text(characterCreation.statsDict[widget.stat][0].toString())
         ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: 20,
-            width: 20,
-            child: FlatButton(
-              child: Icon(Icons.rotate_right),
-              onPressed: _isButtonDisabled ? null : () => characterCreation.reRoll(widget.stat)
-            )
-          )
-        )
       ]
     );
   }

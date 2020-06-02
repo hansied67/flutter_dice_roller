@@ -24,7 +24,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   @override void initState() {
     super.initState();
     _controller = PageController(initialPage: _page);
-    _pages = [RaceSelection(controller: _controller), ClassSelection(controller: _controller), CustomForm(controller: _controller)];
+    _pages = [RaceSelection(controller: _controller), ClassSelection(controller: _controller), CustomForm(controller: _controller), Container()];
   }
 
   @override void dispose() {
@@ -46,6 +46,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
             ),
             body: PageView(
               controller: _controller,
+              physics: NeverScrollableScrollPhysics(),
               children: _pages
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -76,13 +77,21 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: FloatingActionButton(
                         heroTag: "next",
-                        backgroundColor: ((_page == 0 || _page == 1) && _pages[_page].isSelected) ? Theme.of(context).floatingActionButtonTheme.backgroundColor: Colors.grey,
+                        backgroundColor:
+                          ((_page == 0 || _page == 1 || _page == 2) && characterCreation.pageSelection[_page]) ? Theme.of(context).floatingActionButtonTheme.backgroundColor : Colors.grey,
                         onPressed: () {
-                          if (_page != 2) {
-                            if ((_page == 0 || _page == 1) && _pages[_page].isSelected) {
+                          if (_page != 3) {
+                            if ((_page == 0 || _page == 1) && characterCreation.pageSelection[_page]) {
                               setState(() {
                                 _page += 1;
                               });
+                            }
+                            if (_page == 2) {
+                              if (characterCreation.pageSelection[_page] && _pages[_page].getController.currentState.validate()) {
+                                setState(() {
+                                  _page += 1;
+                                });
+                              }
                             }
                           }
                           _controller.animateToPage(

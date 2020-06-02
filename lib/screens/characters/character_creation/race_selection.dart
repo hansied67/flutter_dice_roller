@@ -27,7 +27,7 @@ class _RaceSelectionState extends State<RaceSelection> {
     final globalVariables = Provider.of<GlobalVariables>(context);
     return Column(
         children: [
-          widget._isSelectedTotal ?
+          characterCreation.pageSelection[0] ?
           Expanded(
             flex: 2,
             child: Padding(
@@ -37,7 +37,7 @@ class _RaceSelectionState extends State<RaceSelection> {
                     itemBuilder: (context, index) {
                       return Padding(
                           padding: globalVariables.isMobile ? const EdgeInsets.all(8.0) : const EdgeInsets.all(16.0),
-                          child: characterCreation.raceInfo[index]
+                          child: Container(child: characterCreation.raceInfo[index])
                       );
                     },
                 )
@@ -58,7 +58,7 @@ class _RaceSelectionState extends State<RaceSelection> {
                           characterCreation.setRace(characterCreation.races.keys.elementAt(index));
                           characterCreation.confirmRace(globalVariables);
                           setState(() {
-                            widget._isSelectedTotal = true;
+                            characterCreation.setPage(0, true);
                           });
                         },
                         child: Stack(

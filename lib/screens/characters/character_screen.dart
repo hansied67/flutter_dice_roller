@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 
 import '../../global_variables.dart';
+import 'character_creation/character_creation.dart';
 
 class CharacterScreen extends StatefulWidget {
   CharacterScreen({Key key}) : super(key: key);
@@ -14,26 +15,87 @@ class CharacterScreen extends StatefulWidget {
 class _CharacterScreenState extends State<CharacterScreen> {
   var _cards = new List<Card>();
 
-  void getCards(BuildContext context) {
+  final _formKey = GlobalKey<FormState>();
+  final _controller = TextEditingController();
+
+  void getCards(BuildContext context, var characterCreation) {
     _cards.clear();
     _cards.add(Card(
       color: ThemeData.dark().cardColor.withAlpha(200),
       child: InkWell(
         child: Container(
-          height: 70,
-          width: 70,
+          height: 100,
+          width: 100,
           child: Icon(Icons.add)
         ),
         onTap: () {
-          Navigator.pushNamed(context, '/character_creation');
+          showDialog(
+            context: context,
+            child: AlertDialog(
+              title: const Text("Input Character Name"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        maxLength: 100,
+                        controller: _controller,
+                        autofocus: true,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: InputDecoration(labelText: "Name"),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Value can't be empty";
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (text) {
+                          if (_formKey.currentState.validate()) {
+                            characterCreation.setName(text);
+                            characterCreation.roll();
+                            Navigator.pushNamed(context, '/character_creation');
+                          }
+                        }
+                      )
+                    )
+                  ]
+                )
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      characterCreation.setName(_controller.text);
+                      characterCreation.roll();
+                      Navigator.pushNamed(context, '/character_creation');
+                    }
+                  }
+                )
+              ]
+            )
+          );
         }
       )
     ));
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
-    getCards(context);
+    final characterCreation = Provider.of<CharacterCreation>(context);
+    getCards(context, characterCreation);
     super.didChangeDependencies();
   }
   @override
